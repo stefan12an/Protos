@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".Profile">
+
+    <ImageView
+        android:id="@+id/preview"
+        android:layout_width="wrap_content"
+        android:layout_height="463dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="188dp"
+        app:layout_constraintBottom_toBottomOf="@id/test"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.238" />
+
+    <Button
+    android:id="@+id/logoutBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="16dp"
+    android:text="Logout"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/uploadBtn"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toEndOf="@+id/loadBtn"
+    app:layout_constraintTop_toBottomOf="@+id/sendtext" />
+
+<Button
+    android:id="@+id/loadBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:text="Load"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/logoutBtn"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/test" />
+
+<Button
+    android:id="@+id/uploadBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Upload"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/logoutBtn"
+    app:layout_constraintTop_toBottomOf="@id/test" />
+
+<Button
+    android:id="@+id/sendtext"
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:text="Button"
+    app:layout_constraintBottom_toTopOf="@+id/logoutBtn"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.498"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/test" />
+
+<EditText
+    android:id="@+id/test"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="515dp"
+    android:layout_marginBottom="19dp"
+    android:ems="10"
+    android:inputType="textPersonName"
+    android:text="Name"
+    app:layout_constraintBottom_toTopOf="@+id/sendtext"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "648145605358",
+    "project_id": "protos-dde67",
+    "storage_bucket": "protos-dde67.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648145605358:android:85238693d2cc5d03b599ff",
+        "android_client_info": {
+          "package_name": "com.example.protos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648145605358-nnu14kfrsdtaor5ho2o7ltrrgj0kktu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBolMnyuO5XzHmbWNyrgpNGxzTrvn8Gl9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648145605358-nnu14kfrsdtaor5ho2o7ltrrgj0kktu6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
