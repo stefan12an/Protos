@@ -40,6 +40,7 @@ public class SignupActivity extends AppCompatActivity {
         regBtn = findViewById(R.id.signup_btn);
         logBtn = findViewById(R.id.login);
         mAuth = FirebaseAuth.getInstance();
+        getSupportActionBar().setTitle("Register now!");
 
 
         regBtn.setOnClickListener(view -> {
@@ -53,11 +54,6 @@ public class SignupActivity extends AppCompatActivity {
     private void createUser() {
         String email = etEmail.getText().toString();
         String pass = etPassword.getText().toString();
-//        Map<String, Object> user = new HashMap<>();
-//        user.put("email",email);
-//        user.put("password",pass);
-//        user.put("uid",mAuth.getUid());
-
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Email cannot be empty");
             etEmail.requestFocus();
