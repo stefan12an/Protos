@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         regBtn = findViewById(R.id.signup_btn);
         logBtn = findViewById(R.id.login);
         mAuth = FirebaseAuth.getInstance();
+        getSupportActionBar().setTitle("Welcome back!");
 
         regBtn.setOnClickListener(view -> {
             loginUser();
