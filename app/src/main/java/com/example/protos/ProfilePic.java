@@ -46,8 +46,6 @@ public class ProfilePic extends AppCompatActivity {
         lodBtn = (Button) findViewById(R.id.loadBtn);
         preview = (ImageView) findViewById(R.id.preview);
         mStorageRef = FirebaseStorage.getInstance().getReference("Images");
-
-        sendText = (Button) findViewById(R.id.sendtext);
         databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("users");
 
         lodBtn.setOnClickListener(new View.OnClickListener() {
@@ -60,16 +58,6 @@ public class ProfilePic extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Fileuploader();
-            }
-        });
-        sendText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                test = (EditText) findViewById(R.id.test);
-                String text= test.getText().toString();
-                String id = databaseReference.push().getKey();
-                databaseReference.child(id).setValue(text);
-                Toast.makeText(ProfilePic.this, "Added sucsessfully", Toast.LENGTH_SHORT);
             }
         });
     }
