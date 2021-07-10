@@ -87,12 +87,13 @@ public class AccountSetup extends AppCompatActivity {
                     String type= gender.getSelectedItem().toString();
                     String DOB= dob.getText().toString();
                     HashMap<String,String> userData = new HashMap<String, String>();
+                    userData.put("Username",user);
                     userData.put("Gender",type);
                     userData.put("Date of birth",DOB);
-//                    String id = databaseReference.push().set(user);
-                    databaseReference.child(user).setValue(userData);
-                    startActivity(new Intent(AccountSetup.this,Profile.class))
-                    ;
+                    Log.e("Error",user);
+                    String id = databaseReference.push().getKey();
+                    databaseReference.child(id).setValue(userData);
+                    startActivity(new Intent(AccountSetup.this,Profile.class));
                 }
             });
         }
