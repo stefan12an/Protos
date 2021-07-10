@@ -1,51 +1,45 @@
 package com.example.protos;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.webkit.MimeTypeMap;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import static androidx.constraintlayout.widget.StateSet.TAG;
 
 public class AccountSetup extends AppCompatActivity {
         private TextView mDisplayDate;
         private DatePickerDialog.OnDateSetListener mDateSetListener;
-
-        @Override
+        private Button sendText;
+        private DatabaseReference databaseReference;
+        private EditText userName;
+        private Spinner gender;
+        private TextView dob;
+    @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_accountsetup);
-            Spinner spinner = (Spinner) findViewById(R.id.spinner);
+            sendText = (Button) findViewById(R.id.sendData);
+            databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("users");
+            Spinner spinner = (Spinner) findViewById(R.id.gender);
 // Create an ArrayAdapter using the string array and a default spinner layout
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                     R.array.gender, android.R.layout.simple_spinner_item);
@@ -83,5 +77,24 @@ public class AccountSetup extends AppCompatActivity {
                     mDisplayDate.setText(date);
                 }
             };
+            sendText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    userName = (EditText) findViewById(R.id.username);
+                    gender = (Spinner) findViewById(R.id.gender);
+                    dob = (TextView) findViewById(R.id.tvDate);
+                    String user= userName.getText().toString();
+                    String type= gender.getSelectedItem().toString();
+                    String DOB= dob.getText().toString();
+                    HashMap<String,String> userData = new HashMap<String, String>();
+                    userData.put("Gender",type);
+                    userData.put("Date of birth",DOB);
+//                    String id = databaseReference.push().set(user);
+                    databaseReference.child(user).setValue(userData);
+                    startActivity(new Intent(AccountSetup.this,Profile.class))
+                    ;
+                }
+            });
         }
+
 }
