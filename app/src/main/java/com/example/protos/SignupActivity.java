@@ -19,9 +19,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +35,8 @@ public class SignupActivity extends AppCompatActivity {
     private Button regBtn;
     private TextView logBtn;
     private FirebaseAuth mAuth;
+    DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +46,7 @@ public class SignupActivity extends AppCompatActivity {
         regBtn = findViewById(R.id.signup_btn);
         logBtn = findViewById(R.id.login);
         mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("users");
         getSupportActionBar().setTitle("Register now!");
 
 
@@ -47,7 +54,7 @@ public class SignupActivity extends AppCompatActivity {
             createUser();
         });
         logBtn.setOnClickListener(view -> {
-            startActivity(new Intent(SignupActivity.this,LoginActivity.class));
+            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
         });
     }
 
@@ -66,6 +73,13 @@ public class SignupActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(SignupActivity.this, "User registred succesfully", Toast.LENGTH_SHORT).show();
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                        Date date = new Date();
+                        String strDate = dateFormat.format(date).toString();
+                        HashMap<String, String> userLoginInfo = new HashMap<String, String>();
+                        userLoginInfo.put("Email", mAuth.getCurrentUser().getEmail());
+                        userLoginInfo.put("Creation date",strDate);
+                        databaseReference.child(mAuth.getUid()).setValue(userLoginInfo);
                         startActivity(new Intent(SignupActivity.this, AccountSetup.class));
                     } else {
                         Toast.makeText(SignupActivity.this, "Registration Error" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

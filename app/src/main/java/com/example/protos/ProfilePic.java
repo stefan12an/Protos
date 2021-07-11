@@ -33,7 +33,7 @@ public class ProfilePic extends AppCompatActivity {
     private ImageView preview;
     private StorageReference mStorageRef;
     private EditText test;
-    private int index=0;
+    private int index = 0;
     private DatabaseReference databaseReference;
     public Uri imguri;
 
@@ -71,7 +71,7 @@ public class ProfilePic extends AppCompatActivity {
     private void Fileuploader() {
         String id = databaseReference.push().getKey();
         String unique = String.valueOf(index);
-        StorageReference ref = mStorageRef.child(id + unique +"." + getExtension(imguri));
+        StorageReference ref = mStorageRef.child(id + unique + "." + getExtension(imguri));
         index++;
         ref.putFile(imguri)
                 .addOnSuccessListener((new OnSuccessListener<UploadTask.TaskSnapshot>() {
