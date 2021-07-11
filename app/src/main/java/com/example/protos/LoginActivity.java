@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
             loginUser();
         });
         logBtn.setOnClickListener(view -> {
-            startActivity(new Intent(LoginActivity.this,SignupActivity.class));
+            startActivity(new Intent(LoginActivity.this, SignupActivity.class));
         });
     }
 
