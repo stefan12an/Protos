@@ -44,7 +44,7 @@ public class UploadFragment extends Fragment {
     private Button lodBtn;
     private ImageView preview;
     private StorageReference mStorageRef;
-    private Integer index;
+    private Integer index=0;
     private Context context;
     private DatabaseReference databaseReference;
     public Uri imguri;
