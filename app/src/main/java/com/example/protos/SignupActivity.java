@@ -73,13 +73,6 @@ public class SignupActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(SignupActivity.this, "User registred succesfully", Toast.LENGTH_SHORT).show();
-                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                        Date date = new Date();
-                        String strDate = dateFormat.format(date).toString();
-                        HashMap<String, String> userLoginInfo = new HashMap<String, String>();
-                        userLoginInfo.put("Email", mAuth.getCurrentUser().getEmail());
-                        userLoginInfo.put("Creation date",strDate);
-                        databaseReference.child(mAuth.getUid()).setValue(userLoginInfo);
                         startActivity(new Intent(SignupActivity.this, AccountSetup.class));
                     } else {
                         Toast.makeText(SignupActivity.this, "Registration Error" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
