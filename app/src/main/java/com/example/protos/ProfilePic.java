@@ -42,9 +42,9 @@ public class ProfilePic extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountsetup);
         mAuth = FirebaseAuth.getInstance();
-        upBtn = (Button) findViewById(R.id.uploadBtn);
-        lodBtn = (Button) findViewById(R.id.loadBtn);
-        preview = (ImageView) findViewById(R.id.preview);
+        upBtn = (Button) findViewById(R.id.uploadBtn1);
+        lodBtn = (Button) findViewById(R.id.loadBtn1);
+        preview = (ImageView) findViewById(R.id.preview1);
         mStorageRef = FirebaseStorage.getInstance().getReference("Images");
         databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("users");
 

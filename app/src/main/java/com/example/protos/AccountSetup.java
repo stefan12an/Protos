@@ -21,7 +21,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import static androidx.constraintlayout.widget.StateSet.TAG;
@@ -34,7 +37,9 @@ public class AccountSetup extends AppCompatActivity {
     private EditText userName;
     private Spinner gender;
     private TextView dob;
+    private Integer index;
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +81,7 @@ public class AccountSetup extends AppCompatActivity {
                 month = month + 1;
                 Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
 
-                String date = month + "/" + day + "/" + year;
+                String date = day + "/" + month + "/" + year;
                 mDisplayDate.setText(date);
             }
         };
@@ -86,13 +91,15 @@ public class AccountSetup extends AppCompatActivity {
                 userName = (EditText) findViewById(R.id.username);
                 gender = (Spinner) findViewById(R.id.gender);
                 dob = (TextView) findViewById(R.id.tvDate);
-                String user = userName.getText().toString();
+                index = 0;
+                String userId = userName.getText().toString();
                 String type = gender.getSelectedItem().toString();
                 String DOB = dob.getText().toString();
-                Log.e("Error", user);
-                databaseReference.child(mAuth.getUid()).child("Username").setValue(user);
-                databaseReference.child(mAuth.getUid()).child("Gender").setValue(type);
-                databaseReference.child(mAuth.getUid()).child("Date of birth").setValue(DOB);
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = new Date();
+                String strDate = dateFormat.format(date).toString();
+                User user = new User(userId, mAuth.getCurrentUser().getEmail(), type, DOB, strDate, index);
+                databaseReference.child(mAuth.getUid()).setValue(user);
                 startActivity(new Intent(AccountSetup.this, Profile.class));
             }
         });
