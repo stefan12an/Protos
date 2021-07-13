@@ -6,9 +6,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/protoslogo"
+        android:icon="@mipmap/protos_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/protoslogo"
+        android:roundIcon="@mipmap/protos_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Protos">
         <activity android:name=".ProfilePic"></activity>
