@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.navigation.ui.AppBarConfiguration;
 
-import com.example.protos.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,6 +27,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        } else startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        } else startActivity(new Intent(MainActivity.this, Profile.class));
     }
 }

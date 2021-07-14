@@ -15,7 +15,8 @@
         <activity
             android:name=".Profile"
             android:label="@string/user" />
-        <activity android:name=".AccountSetup" />
+        <activity android:name=".AccountSetup"
+            android:theme="@style/Theme.Protos.NoActionBar"/>
         <activity android:name=".LoginActivity"
             android:theme="@style/Theme.Protos.NoActionBar"/>
         <activity android:name=".SignupActivity"

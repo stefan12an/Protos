@@ -29,24 +29,6 @@
         app:srcCompat="@drawable/protos_logo_text_white" />
 
     <EditText
-        android:id="@+id/pass_edt_text"
-        android:layout_width="250dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/email_edt_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-305dp"
-        android:background="#11F4FAEA"
-        android:drawableLeft="@drawable/ic_action_pass"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPersonName"
-        android:textColor="@color/white"
-        android:textColorHint="#6CF5F5F5"
-        android:textSize="20dp" />
-    <!--        android:textColorHint="@color/white"-->
-
-
-    <EditText
         android:id="@+id/email_edt_text"
         android:layout_width="250dp"
         android:layout_height="30dp"
@@ -58,6 +40,24 @@
         android:ems="10"
         android:hint="Email"
         android:inputType="textPersonName"
+        android:textColor="@color/white"
+        android:textColorHint="#6CF5F5F5"
+        android:textSize="20dp" />
+    <!--        android:textColorHint="@color/white"-->
+
+
+    <EditText
+        android:id="@+id/pass_edt_text"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/email_edt_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-305dp"
+        android:background="#11F4FAEA"
+        android:drawableLeft="@drawable/ic_action_pass"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
         android:textColor="@color/white"
         android:textColorHint="#6CF5F5F5"
         android:textSize="20dp" />

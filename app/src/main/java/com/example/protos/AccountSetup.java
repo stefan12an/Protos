@@ -1,6 +1,7 @@
 package com.example.protos;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -32,7 +33,7 @@ import static androidx.constraintlayout.widget.StateSet.TAG;
 public class AccountSetup extends AppCompatActivity {
     private TextView mDisplayDate;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-    private Button sendText;
+    private CardView sendText;
     private DatabaseReference databaseReference;
     private EditText userName;
     private Spinner gender;
@@ -44,7 +45,10 @@ public class AccountSetup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountsetup);
-        sendText = (Button) findViewById(R.id.sendData);
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        sendText = (CardView) findViewById(R.id.sendData);
         databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("users");
         Spinner spinner = (Spinner) findViewById(R.id.gender);
         mAuth = FirebaseAuth.getInstance();
