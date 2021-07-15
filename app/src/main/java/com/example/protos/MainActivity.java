@@ -30,4 +30,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         } else startActivity(new Intent(MainActivity.this, Profile.class));
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAuth.signOut();
+    }
 }

@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -37,23 +38,29 @@ public class AccountSetup extends AppCompatActivity {
     private EditText userName;
     private Spinner gender;
     private TextView dob;
-    private Integer index;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountsetup);
+<<<<<<< Updated upstream
         sendText = (Button) findViewById(R.id.sendData);
         databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("users");
+=======
+        databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
+
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        sendText = (CardView) findViewById(R.id.sendData);
+
+>>>>>>> Stashed changes
         Spinner spinner = (Spinner) findViewById(R.id.gender);
         mAuth = FirebaseAuth.getInstance();
-// Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.gender, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         mDisplayDate = (TextView) findViewById(R.id.tvDate);
 
@@ -91,16 +98,20 @@ public class AccountSetup extends AppCompatActivity {
                 userName = (EditText) findViewById(R.id.username);
                 gender = (Spinner) findViewById(R.id.gender);
                 dob = (TextView) findViewById(R.id.tvDate);
-                index = 0;
                 String userId = userName.getText().toString();
                 String type = gender.getSelectedItem().toString();
                 String DOB = dob.getText().toString();
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 Date date = new Date();
-                String strDate = dateFormat.format(date).toString();
-                User user = new User(userId, mAuth.getCurrentUser().getEmail(), type, DOB, strDate, index);
-                databaseReference.child(mAuth.getUid()).setValue(user);
-                startActivity(new Intent(AccountSetup.this, Profile.class));
+                String strDate = dateFormat.format(date);
+                User user = new User(userId, mAuth.getCurrentUser().getEmail(), type, DOB, strDate);
+                databaseReference.child(mAuth.getUid()).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        startActivity(new Intent(AccountSetup.this, ProfilePic.class));
+                    }
+                });
+
             }
         });
     }

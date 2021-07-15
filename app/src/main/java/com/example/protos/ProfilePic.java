@@ -15,8 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -24,29 +26,29 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ProfilePic extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private Button upBtn;
     private Button lodBtn;
-    private Button sendText;
     private ImageView preview;
     private StorageReference mStorageRef;
-    private EditText test;
-    private int index = 0;
     private DatabaseReference databaseReference;
-    public Uri imguri;
+    public Uri img_uri;
+    private Uri downloadUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accountsetup);
+        setContentView(R.layout.activity_profile_pic);
         mAuth = FirebaseAuth.getInstance();
-        upBtn = (Button) findViewById(R.id.uploadBtn1);
-        lodBtn = (Button) findViewById(R.id.loadBtn1);
-        preview = (ImageView) findViewById(R.id.preview1);
-        mStorageRef = FirebaseStorage.getInstance().getReference("Images");
-        databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("users");
+        upBtn = (Button) findViewById(R.id.uBtn);
+        lodBtn = (Button) findViewById(R.id.lBtn);
+        preview = (ImageView) findViewById(R.id.view_pic);
+        mStorageRef = FirebaseStorage.getInstance().getReference("ProfilePic");
+        databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
 
         lodBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,18 +71,21 @@ public class ProfilePic extends AppCompatActivity {
     }
 
     private void Fileuploader() {
-        String id = databaseReference.push().getKey();
-        String unique = String.valueOf(index);
-        StorageReference ref = mStorageRef.child(id + unique + "." + getExtension(imguri));
-        index++;
-        ref.putFile(imguri)
-                .addOnSuccessListener((new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        StorageReference ref = mStorageRef.child(mAuth.getUid() + "." + getExtension(img_uri));
+        ref.putFile(img_uri)
+                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Toast.makeText(ProfilePic.this, "Image Uploaded succesfully", Toast.LENGTH_SHORT);
+                    public void onComplete(@NonNull @NotNull Task<UploadTask.TaskSnapshot> task) {
+                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                User user = new User(uri.toString());
+                                databaseReference.child(mAuth.getUid()).child("profile_pic").setValue(user.getProfile_pic());
+                                startActivity(new Intent(ProfilePic.this, Profile.class));
+                            }
+                        });
                     }
-                }))
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -102,8 +107,8 @@ public class ProfilePic extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imguri = data.getData();
-            preview.setImageURI(imguri);
+            img_uri = data.getData();
+            preview.setImageURI(img_uri);
         }
     }
 
