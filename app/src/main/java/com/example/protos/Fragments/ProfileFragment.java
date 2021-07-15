@@ -50,9 +50,8 @@ public class ProfileFragment extends Fragment {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User post = dataSnapshot.getValue(User.class);
-                String imgUrl=post.getProfile_pic();
-                Glide.with(ProfileFragment.this).load(imgUrl).into(profile_pic);
+                String post = dataSnapshot.getValue(String.class);
+                Glide.with(ProfileFragment.this).load(post).into(profile_pic);
             }
 
             @Override
@@ -61,7 +60,7 @@ public class ProfileFragment extends Fragment {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
-        databaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
+        databaseReference.child(mAuth.getUid()).child("profile_pic").addValueEventListener(postListener);
         return view;
     }
 }
