@@ -1,66 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile">
+    android:theme="@style/Theme.Protos.NoActionBar"
+    tools:context=".AccountSetup">
+
+
 
     <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleX="0.6"
-        android:scaleY="0.6"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/protosfull" />
+        android:id="@+id/imageView13"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleX="1"
+        android:scaleY="1.4"
+        app:srcCompat="@drawable/wood3" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="280dp"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Begin your jouney!"
+        android:textColor="@color/white"
+        android:textSize="35dp" />
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Username" />
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="190dp"
+        app:srcCompat="@drawable/polaroid_1" />
 
-        <Spinner
-            android:id="@+id/gender"
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="20dp"
+        android:rotation="30"
+        app:srcCompat="@drawable/polaroid_2" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:drawableLeft="@drawable/ic_action_user_light"
+        android:ems="10"
+        android:padding="10dp"
+        android:elevation="10dp"
+        android:background="@drawable/bg_rounded"
+        android:hint="Username"
+        android:layout_marginTop="370dp"
+        android:inputType="textPersonName"
+        android:textAlignment="viewStart"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-60dp"
+        android:drawableLeft="@drawable/ic_action_date_light"
+        android:ems="10"
+        android:padding="10dp"
+        android:elevation="10dp"
+        android:background="@drawable/bg_rounded"
+        android:textColor="@color/black"
+        android:hint="Date of birth"
+        android:inputType="date"
+        android:textAlignment="viewStart"
+        android:textSize="20dp" />
+
+    <Spinner
+        android:id="@+id/gender"
+        android:layout_width="235dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/tvDate"
+        android:layout_alignBottom="@id/tvDate"
+        android:layout_marginBottom="-60dp"
+        android:drawableLeft="@drawable/ic_action_gender_light"
+        android:padding="10dp"
+        android:elevation="10dp"
+        android:background="@drawable/bg_rounded"
+        android:layout_weight="2" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/sendData"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="121dp"
+        android:layout_marginBottom="70dp"
+        app:cardBackgroundColor="#FFA33F"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="10dp">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Date"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Sign up"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
-        <Button
-            android:id="@+id/sendData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:text="Continue" />
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

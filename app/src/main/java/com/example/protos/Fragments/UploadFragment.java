@@ -47,7 +47,7 @@ public class UploadFragment extends Fragment {
     private Integer index=0;
     private Context context;
     private DatabaseReference databaseReference;
-    public Uri imguri;
+    public Uri img_uri;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -83,9 +83,9 @@ public class UploadFragment extends Fragment {
 
     private void Fileuploader() {
         String unique = String.valueOf(index);
-        StorageReference ref = mStorageRef.child(mAuth.getUid()).child(mAuth.getUid() + unique + "." + getExtension(imguri));
+        StorageReference ref = mStorageRef.child(mAuth.getUid()).child(mAuth.getUid() + unique + "." + getExtension(img_uri));
         index++;
-        ref.putFile(imguri)
+        ref.putFile(img_uri)
                 .addOnSuccessListener((new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -114,8 +114,8 @@ public class UploadFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imguri = data.getData();
-            preview.setImageURI(imguri);
+            img_uri = data.getData();
+            preview.setImageURI(img_uri);
         }
     }
 }
