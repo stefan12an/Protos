@@ -8,18 +8,29 @@ public class User {
     String gender;
     String date_of_birth;
     String creation_date;
-    Integer number_of_photos;
+    String profile_pic;
 
     public User() {
     }
 
-    public User(String username, String email, String gender, String date_of_birth, String creation_date, Integer number_of_photos) {
+    public User(String profile_pic) {
+        this.profile_pic = profile_pic;
+    }
+
+    public User(String username, String email, String gender, String date_of_birth, String creation_date) {
         this.username = username;
         this.email = email;
         this.gender = gender;
         this.date_of_birth = date_of_birth;
         this.creation_date = creation_date;
-        this.number_of_photos = number_of_photos;
+    }
+
+    public String getProfile_pic() {
+        return profile_pic;
+    }
+
+    public void setProfile_pic(String profile_pic) {
+        this.profile_pic = profile_pic;
     }
 
     public String getUsername() {
@@ -60,13 +71,5 @@ public class User {
 
     public void setCreation_date(String creation_date) {
         this.creation_date = creation_date;
-    }
-
-    public Integer getNumber_of_photos() {
-        return number_of_photos;
-    }
-
-    public void setNumber_of_photos(Integer number_of_photos) {
-        this.number_of_photos = number_of_photos;
     }
 }
