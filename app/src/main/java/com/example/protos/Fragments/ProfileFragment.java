@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,15 +40,35 @@ public class ProfileFragment extends Fragment {
     private StorageReference mStorageRef;
     private DatabaseReference databaseReference;
     private ImageView profile_pic;
+    private TextView username,email;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile,container,false);
         mAuth = FirebaseAuth.getInstance();
+        username = view.findViewById(R.id.user);
+        email = view.findViewById(R.id.email);
         profile_pic= view.findViewById(R.id.profile_pic);
         mStorageRef = FirebaseStorage.getInstance().getReference("Images");
         databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
         ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User post = dataSnapshot.getValue(User.class);
+                username.setText(post.getUsername());
+                email.setText(post.getEmail());
+                //Glide.with(ProfileFragment.this).load(post.getProfile_pic()).into(profile_pic);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        databaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
+
+        ValueEventListener postListener1 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String post = dataSnapshot.getValue(String.class);
@@ -60,7 +81,7 @@ public class ProfileFragment extends Fragment {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
-        databaseReference.child(mAuth.getUid()).child("profile_pic").addValueEventListener(postListener);
+        databaseReference.child(mAuth.getUid()).child("profile_pic").addValueEventListener(postListener1);
         return view;
     }
 }

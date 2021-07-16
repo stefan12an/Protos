@@ -3,6 +3,7 @@
     package="com.example.protos">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,16 +12,20 @@
         android:roundIcon="@mipmap/protos_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Protos">
-        <activity android:name=".ProfilePic"></activity>
+        <activity android:name=".Settings"></activity>
+        <activity android:name=".ProfilePic" />
         <activity
             android:name=".Profile"
             android:label="@string/user" />
-        <activity android:name=".AccountSetup"
-            android:theme="@style/Theme.Protos.NoActionBar"/>
-        <activity android:name=".LoginActivity"
-            android:theme="@style/Theme.Protos.NoActionBar"/>
-        <activity android:name=".SignupActivity"
-            android:theme="@style/Theme.Protos.NoActionBar"/>
+        <activity
+            android:name=".AccountSetup"
+            android:theme="@style/Theme.Protos.NoActionBar" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.Protos.NoActionBar" />
+        <activity
+            android:name=".SignupActivity"
+            android:theme="@style/Theme.Protos.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -30,6 +35,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
     </application>
 
 </manifest>

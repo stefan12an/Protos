@@ -10,12 +10,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+
 import com.example.protos.Fragments.HomeFragment;
 import com.example.protos.Fragments.ProfileFragment;
 import com.example.protos.Fragments.UploadFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -58,18 +56,6 @@ public class Profile extends AppCompatActivity {
             }
         };
         databaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
-//        databaseReference.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                User user = snapshot.getValue(User.class);
-//                Log.e(TAG,user.getUsername());
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-//                Log.w(TAG, "Failed to read value.", error.toException());
-//            }
-//        });
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListner =
@@ -104,8 +90,7 @@ public class Profile extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-                Log.e("Error", mAuth.getCurrentUser().getEmail());
-//                Toast.makeText(Profile.this, "Not ready yet", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Profile.this, Settings.class));
                 break;
             case R.id.logout:
                 mAuth.signOut();
