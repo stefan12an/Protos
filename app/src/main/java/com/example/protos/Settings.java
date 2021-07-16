@@ -12,7 +12,6 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,11 +31,12 @@ import org.jetbrains.annotations.NotNull;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfilePic extends AppCompatActivity {
+public class Settings extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private Button upBtn;
-    private CircleImageView preview;
+    private Button saveBtn;
+    private CircleImageView edit_pic;
+    private EditText new_user;
     private StorageReference mStorageRef;
     private DatabaseReference databaseReference;
     public Uri img_uri;
@@ -44,30 +44,32 @@ public class ProfilePic extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_pic);
+        setContentView(R.layout.activity_settings);
         mAuth = FirebaseAuth.getInstance();
-    upBtn = (Button) findViewById(R.id.uBtn);
-    preview = (CircleImageView) findViewById(R.id.view_pic);
-    mStorageRef = FirebaseStorage.getInstance().getReference("ProfilePic");
-    databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
+        saveBtn = (Button) findViewById(R.id.saveBtn);
+        edit_pic = (CircleImageView) findViewById(R.id.edit_pic);
+        mStorageRef = FirebaseStorage.getInstance().getReference("ProfilePic");
+        databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
+        getSupportActionBar().setTitle("Settings");
 
-        preview.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1,1)
-                    .start(ProfilePic.this);
-        }
-    });
-        upBtn.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Fileuploader();
-        }
-    });
-}
-//
+        edit_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1,1)
+                        .start(Settings.this);
+            }
+        });
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new_user = (EditText) findViewById(R.id.edit_user);
+                Fileuploader();
+            }
+        });
+    }
+
 //    private String getExtension(Uri uri) {
 //        ContentResolver cr = getContentResolver();
 //        MimeTypeMap mimeTypeInfo = MimeTypeMap.getSingleton();
@@ -76,8 +78,7 @@ public class ProfilePic extends AppCompatActivity {
 
     private void Fileuploader() {
         String uri = img_uri.toString();
-        StorageReference ref = mStorageRef.child(mAuth.getUid() + "." + uri.substring(uri.lastIndexOf(".")+1));
-        ref.putFile(img_uri)
+        StorageReference ref = mStorageRef.child(mAuth.getUid() + "." + uri.substring(uri.lastIndexOf(".")+1));        ref.putFile(img_uri)
                 .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<UploadTask.TaskSnapshot> task) {
@@ -86,7 +87,8 @@ public class ProfilePic extends AppCompatActivity {
                             public void onSuccess(Uri uri) {
                                 User user = new User(uri.toString());
                                 databaseReference.child(mAuth.getUid()).child("profile_pic").setValue(user.getProfile_pic());
-                                startActivity(new Intent(ProfilePic.this, Profile.class));
+                                databaseReference.child(mAuth.getUid()).child("username").setValue(new_user.getText().toString());
+                                startActivity(new Intent(Settings.this, Profile.class));
                             }
                         });
                     }
@@ -94,7 +96,7 @@ public class ProfilePic extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ProfilePic.this, "Image Upload error", Toast.LENGTH_SHORT);
+                        Toast.makeText(Settings.this, "Image Upload error", Toast.LENGTH_SHORT);
                     }
                 });
     }
@@ -105,7 +107,7 @@ public class ProfilePic extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK) {
                 img_uri = result.getUri();
-                preview.setImageURI(img_uri);
+                edit_pic.setImageURI(img_uri);
             }
             else if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
                 Toast.makeText(this,result.getError().getMessage(),Toast.LENGTH_SHORT).show();

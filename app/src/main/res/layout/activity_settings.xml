@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfilePic">
+    tools:context=".Settings">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/view_pic"
+        android:id="@+id/edit_pic"
         android:layout_width="130dp"
         android:layout_height="130dp"
 
@@ -21,15 +21,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/uBtn"
+        android:id="@+id/saveBtn"
         android:layout_width="208dp"
         android:layout_height="wrap_content"
-        android:text="Upload"
+        android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_pic" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_user" />
+
+    <EditText
+        android:id="@+id/edit_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Username"
+        app:layout_constraintBottom_toTopOf="@+id/saveBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_pic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
