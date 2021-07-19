@@ -12,7 +12,15 @@
         android:roundIcon="@mipmap/protos_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Protos">
-        <activity android:name=".Settings"></activity>
+        <activity android:name=".SplashActivity"
+            android:theme="@style/Theme.Protos.NoActionBar">
+        <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Settings" />
         <activity android:name=".ProfilePic" />
         <activity
             android:name=".Profile"
@@ -29,11 +37,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
