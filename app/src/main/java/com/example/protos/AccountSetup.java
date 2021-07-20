@@ -11,13 +11,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.protos.Model.Users;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +26,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import static androidx.constraintlayout.widget.StateSet.TAG;
 
@@ -99,7 +97,7 @@ public class AccountSetup extends AppCompatActivity {
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 Date date = new Date();
                 String strDate = dateFormat.format(date);
-                User user = new User(userId, mAuth.getCurrentUser().getEmail(), type, DOB, strDate);
+                Users user = new Users(userId, mAuth.getCurrentUser().getEmail(), type, DOB, strDate);
                 databaseReference.child(mAuth.getUid()).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {

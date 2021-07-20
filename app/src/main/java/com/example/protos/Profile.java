@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.example.protos.Fragments.HomeFragment;
 import com.example.protos.Fragments.ProfileFragment;
 import com.example.protos.Fragments.UploadFragment;
+import com.example.protos.Model.Users;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -38,13 +39,13 @@ public class Profile extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListner);
-        getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new ProfileFragment()).commit();
 
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                User post = dataSnapshot.getValue(User.class);
+                Users post = dataSnapshot.getValue(Users.class);
                 getSupportActionBar().setTitle(post.getUsername());
                 // ..
             }
