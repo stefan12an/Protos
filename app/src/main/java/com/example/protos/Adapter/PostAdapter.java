@@ -69,7 +69,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.setPost_pic(post.getPost_pic());
         holder.setCaption(post.getCaption());
         holder.setCreation_date(post.getCreation_date());
-        String getUserId = post.getUsername();
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -94,8 +93,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     public class PostViewHolder extends RecyclerView.ViewHolder {
-        private Users user;
-        private Posts post;
         private TextView user_holder;
         private TextView creation_date;
         private TextView caption;
