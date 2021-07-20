@@ -1,8 +1,8 @@
-package com.example.protos;
+package com.example.protos.Model;
 
 import java.util.Date;
 
-public class User {
+public class Users {
     String username;
     String email;
     String gender;
@@ -10,14 +10,14 @@ public class User {
     String creation_date;
     String profile_pic;
 
-    public User() {
+    public Users() {
     }
 
-    public User(String profile_pic) {
+    public Users(String profile_pic) {
         this.profile_pic = profile_pic;
     }
 
-    public User(String username, String email, String gender, String date_of_birth, String creation_date) {
+    public Users(String username, String email, String gender, String date_of_birth, String creation_date) {
         this.username = username;
         this.email = email;
         this.gender = gender;
