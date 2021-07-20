@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getContext(),"Reached bottom",Toast.LENGTH_SHORT).show();
                 }
             });
-            query = PostsDatabaseReference.orderByChild("Sold");
+            query = PostsDatabaseReference.child(mAuth.getUid()).orderByChild("creation_date");
             query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

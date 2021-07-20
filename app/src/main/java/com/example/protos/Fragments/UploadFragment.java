@@ -117,7 +117,7 @@ public class UploadFragment extends Fragment {
         String uri = postImageUri.toString();
         String randomId = UUID.randomUUID().toString();
         if (postImageUri != null && !caption.isEmpty()) {
-            StorageReference ref = mStorageRef.child(randomId + "." + uri.substring(uri.lastIndexOf(".") + 1));
+            StorageReference ref = mStorageRef.child(mAuth.getUid()).child(randomId + "." + uri.substring(uri.lastIndexOf(".") + 1));
             ref.putFile(postImageUri)
                     .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -137,7 +137,7 @@ public class UploadFragment extends Fragment {
                                         newPost.put("creation_date", strDate);
                                         newPost.put("post_pic", uri.toString());
 
-                                        PostsDatabaseReference.push().setValue(newPost);
+                                        PostsDatabaseReference.child(mAuth.getUid()).push().setValue(newPost);
                                         mPostBar.setVisibility(View.INVISIBLE);
                                         Fragment profileFragment = new ProfileFragment();
                                         getFragmentManager().beginTransaction().replace(R.id.flFragment, profileFragment).commit();
