@@ -68,7 +68,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         Posts post = mList.get(position);
         holder.setPost_pic(post.getPost_pic());
         holder.setCaption(post.getCaption());
-
+        holder.setCreation_date(post.getCreation_date());
         String getUserId = post.getUsername();
         ValueEventListener postListener = new ValueEventListener() {
             @Override
