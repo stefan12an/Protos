@@ -33,6 +33,8 @@ import com.google.firebase.storage.StorageReference;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -82,8 +84,9 @@ public class HomeFragment extends Fragment {
                     for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                         Posts post = postSnapshot.getValue(Posts.class);
                         list.add(post);
-                        adapter.notifyDataSetChanged();
                     }
+                    Collections.reverse(list);
+                    adapter.notifyDataSetChanged();
                 }
 
                 @Override
