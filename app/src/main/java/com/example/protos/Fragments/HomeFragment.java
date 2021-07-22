@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.protos.Adapter.FeedAdapter;
 import com.example.protos.Adapter.PostAdapter;
 import com.example.protos.Model.Posts;
 import com.example.protos.R;
@@ -40,7 +41,7 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 
 public class HomeFragment extends Fragment {
-    private PostAdapter adapter;
+    private FeedAdapter adapter;
     private List<Posts> list;
     private RecyclerView mRecyclerView;
     private FirebaseAuth mAuth;
@@ -65,35 +66,40 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         list = new ArrayList<>();
-        adapter = new PostAdapter(getContext(), list);
+        adapter = new FeedAdapter(getContext(), list);
         mRecyclerView.setAdapter(adapter);
         if (mAuth.getCurrentUser() != null) {
-            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            PostsDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    Boolean isBottom = !mRecyclerView.canScrollVertically(1);
-                    if(isBottom)
-                        Toast.makeText(getContext(),"Reached bottom",Toast.LENGTH_SHORT).show();
-                }
-            });
-            query = PostsDatabaseReference.child(mAuth.getUid()).orderByChild("creation_date");
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                        Posts post = postSnapshot.getValue(Posts.class);
-                        list.add(post);
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                        if(!postSnapshot.getKey().equals(mAuth.getUid())) {
+                            query = PostsDatabaseReference.child(postSnapshot.getKey()).orderByChild("creation_date");
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        Posts post = snapshot.getValue(Posts.class);
+                                        list.add(post);
+                                    }
+                                    Collections.reverse(list);
+                                    adapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    // Getting Post failed, log a message
+                                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                    // ...
+                                }
+                            });
+                        }
                     }
-                    Collections.reverse(list);
-                    adapter.notifyDataSetChanged();
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
-                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                    // ...
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
                 }
             });
         }

@@ -6,13 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".ProfilePic">
 
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleX="1"
+        android:scaleY="1.4"
+        app:srcCompat="@drawable/wood3" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Add your profile picture"
+        android:textColor="@color/white"
+        android:textSize="35dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/white_circle"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="400dp"
+        android:src="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/view_pic"
         android:layout_width="130dp"
         android:layout_height="130dp"
 
-        android:layout_marginTop="125dp"
-        android:layout_marginBottom="476dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="400dp"
         android:src="@drawable/add_user_pic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,16 +55,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.cardview.widget.CardView
         android:id="@+id/uBtn"
-        android:layout_width="208dp"
-        android:layout_height="wrap_content"
-        android:text="Upload"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="121dp"
+        android:layout_marginBottom="70dp"
+        app:cardBackgroundColor="#FFA33F"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_pic" />
+        app:layout_constraintTop_toBottomOf="@+id/white_circle">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Upload"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
