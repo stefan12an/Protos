@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.protos.Profile;
 import com.example.protos.R;
 import com.example.protos.Model.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -57,6 +58,7 @@ public class UploadFragment extends Fragment {
     private DatabaseReference UsersDatabaseReference;
     private DatabaseReference PostsDatabaseReference;
     public Uri postImageUri;
+    long maxid;
 
     @Nullable
     @Override
@@ -85,7 +87,19 @@ public class UploadFragment extends Fragment {
             }
         };
         UsersDatabaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
+        PostsDatabaseReference.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    maxid=snapshot.getChildrenCount();
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +118,7 @@ public class UploadFragment extends Fragment {
 
     private void SelectImage() {
         Intent intent = CropImage.activity()
-                .setGuidelines(CropImageView.Guidelines.ON)
+                .setGuidelines(CropImageView.Guidelines.OFF)
                 .setAspectRatio(3, 2)
                 .setMinCropResultSize(512, 512)
                 .getIntent(getContext());
@@ -132,12 +146,12 @@ public class UploadFragment extends Fragment {
 
                                         HashMap<String, String> newPost = new HashMap<String, String>();
                                         newPost.put("user_id", mAuth.getUid());
-                                        newPost.put("username",username);
+                                        newPost.put("username", username);
                                         newPost.put("caption", caption);
                                         newPost.put("creation_date", strDate);
                                         newPost.put("post_pic", uri.toString());
 
-                                        PostsDatabaseReference.child(mAuth.getUid()).push().setValue(newPost);
+                                        PostsDatabaseReference.child(mAuth.getUid()).child(String.valueOf(maxid+1)).setValue(newPost);
                                         mPostBar.setVisibility(View.INVISIBLE);
                                         Fragment profileFragment = new ProfileFragment();
                                         getFragmentManager().beginTransaction().replace(R.id.flFragment, profileFragment).commit();

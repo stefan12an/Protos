@@ -3,6 +3,7 @@ package com.example.protos;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -32,8 +33,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfilePic extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private Button upBtn;
-    private CircleImageView preview;
+    private CardView upBtn;
+    private CircleImageView preview,white_circle;
     private StorageReference mStorageRef;
     private DatabaseReference databaseReference;
     public Uri img_uri;
@@ -43,9 +44,13 @@ public class ProfilePic extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_pic);
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         mAuth = FirebaseAuth.getInstance();
-        upBtn = (Button) findViewById(R.id.uBtn);
+        upBtn = (CardView) findViewById(R.id.uBtn);
         preview = (CircleImageView) findViewById(R.id.view_pic);
+        white_circle = (CircleImageView) findViewById(R.id.white_circle);
         mStorageRef = FirebaseStorage.getInstance().getReference("ProfilePic");
         databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
 
@@ -56,6 +61,7 @@ public class ProfilePic extends AppCompatActivity {
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setAspectRatio(1, 1)
                         .start(ProfilePic.this);
+                white_circle.setImageAlpha(0);
             }
         });
         upBtn.setOnClickListener(new View.OnClickListener() {

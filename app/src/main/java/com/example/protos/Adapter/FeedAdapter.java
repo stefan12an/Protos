@@ -36,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.ContentValues.TAG;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
+public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
     private List<Posts> mList;
     private Context context;
     private FirebaseAuth mAuth;
@@ -45,7 +45,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private DatabaseReference UsersDatabaseReference;
     private DatabaseReference PostsDatabaseReference;
 
-    public PostAdapter(Context context, List<Posts> mList) {
+    public FeedAdapter(Context context, List<Posts> mList) {
         this.mList = mList;
         this.context = context;
     }
@@ -53,14 +53,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @NonNull
     @NotNull
     @Override
-    public PostViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.each_post, parent, false);
+    public FeedViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.feed_post, parent, false);
 
-        return new PostViewHolder(v);
+        return new FeedViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull PostViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull FeedViewHolder holder, int position) {
         mAuth = FirebaseAuth.getInstance();
         mPostStorageRef = FirebaseStorage.getInstance().getReference("PostPics");
         mUserStorageRef = FirebaseStorage.getInstance().getReference("ProfilePic");
@@ -68,6 +68,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         PostsDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Posts");
         Posts post = mList.get(position);
         holder.setPost_pic(post.getPost_pic());
+        holder.setCaption(post.getCaption());
+        holder.setCreation_date(post.getCreation_date());
+        UsersDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                for (DataSnapshot userSnapshot: snapshot.getChildren()) {
+                    if(post.getUser_id().equals(userSnapshot.getKey())){
+                        Users user = userSnapshot.getValue(Users.class);
+                        holder.setProfile_pic(user.getProfile_pic());
+                        holder.setUser_holder(user.getUsername());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
@@ -75,11 +94,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return mList.size();
     }
 
-    public class PostViewHolder extends RecyclerView.ViewHolder {
+    public class FeedViewHolder extends RecyclerView.ViewHolder {
+        private TextView user_holder;
+        private TextView creation_date;
+        private TextView caption;
+        private CircleImageView profile_pic;
         private ImageView post_pic;
         View mView;
 
-        public PostViewHolder(@NonNull @NotNull View itemView) {
+        public FeedViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             mView = itemView;
         }
@@ -87,6 +110,26 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         public void setPost_pic(String urlPost) {
             post_pic = mView.findViewById(R.id.post_pic);
             Glide.with(context).load(urlPost).into(post_pic);
+        }
+
+        public void setProfile_pic(String urlProfile) {
+            profile_pic = mView.findViewById(R.id.profile_pic);
+            Glide.with(context).load(urlProfile).into(profile_pic);
+        }
+
+        public void setUser_holder(String Username) {
+            user_holder = mView.findViewById(R.id.user_holder);
+            user_holder.setText(Username);
+        }
+
+        public void setCreation_date(String date) {
+            creation_date = mView.findViewById(R.id.creation_date);
+            creation_date.setText(date);
+        }
+
+        public void setCaption(String post_caption) {
+            caption = mView.findViewById(R.id.post_caption);
+            caption.setText(post_caption);
         }
     }
 }
