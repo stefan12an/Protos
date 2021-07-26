@@ -2,15 +2,19 @@ package com.example.protos;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -45,9 +49,9 @@ public class Settings extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Button saveBtn;
     private Button delBtn;
-    private Button btn;
     private CircleImageView edit_pic;
     private EditText new_user;
+    private ProgressBar delBar;
     private FirebaseStorage mPostStorage;
     private StorageReference mUserStorageRef;
     private FirebaseStorage mUserStorage;
@@ -62,14 +66,14 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         mAuth = FirebaseAuth.getInstance();
+        delBar = (ProgressBar) findViewById(R.id.delBar);
         saveBtn = (Button) findViewById(R.id.saveBtn);
         delBtn = (Button) findViewById(R.id.deleteBtn);
-        btn = (Button) findViewById(R.id.button);
         edit_pic = (CircleImageView) findViewById(R.id.edit_pic);
         mPostStorage = FirebaseStorage.getInstance();
         mUserStorage = FirebaseStorage.getInstance();
         mUserStorageRef = FirebaseStorage.getInstance().getReference("ProfilePic");
-
+        delBar.setVisibility(View.INVISIBLE);
         UserDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
         PostsDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Posts");
         getSupportActionBar().setTitle("Settings");
@@ -114,29 +118,34 @@ public class Settings extends AppCompatActivity {
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteStorageData();
-                //deleteDatabaseData();
-               // deleteFirebaseUser();
-                startActivity(new Intent(Settings.this,LoginActivity.class));
-            }
-        });
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PostsDatabaseReference.child(mAuth.getUid()).orderByChild("post_pic").addValueEventListener(new ValueEventListener() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+                builder.setTitle("Delete your account!");
+                builder.setMessage("By hitting OK you agree to delete everything related to your account.");
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                        for(DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                            Posts post = dataSnapshot.getValue(Posts.class);
-                            Log.e(TAG, String.valueOf(post.getPost_pic()));
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                        Log.e(TAG,"Am belit cariciu");
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.cancel();
                     }
                 });
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        delBar.setVisibility(View.VISIBLE);
+                        deleteStorageData();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                deleteDatabaseData();
+                                deleteFirebaseUser();
+                                delBar.setVisibility(View.INVISIBLE);
+                                startActivity(new Intent(Settings.this,LoginActivity.class));
+                            }
+                        }, 1000);
+                    }
+                });
+                builder.show();
             }
         });
     }
@@ -198,11 +207,10 @@ public class Settings extends AppCompatActivity {
 
             }
         });
-        //Nush ce plm sa pun aici
     }
     private void deleteDatabaseData() {
-        UserDatabaseReference.child(mAuth.getUid()).removeValue();
         PostsDatabaseReference.child(mAuth.getUid()).removeValue();
+        UserDatabaseReference.child(mAuth.getUid()).removeValue();
     }
     private void deleteFirebaseUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
