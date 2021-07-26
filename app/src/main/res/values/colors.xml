@@ -7,4 +7,7 @@
     <color name="viridian">#204a3d</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="danger_red">#D9534F</color>
+    <color name="success_green">#5CB85C</color>
+    <color name="warning_yellow">#F0AD4E</color>
 </resources>

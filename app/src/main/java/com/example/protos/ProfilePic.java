@@ -76,7 +76,7 @@ public class ProfilePic extends AppCompatActivity {
         String uri = img_uri.toString();
         if (isPhotoSelected) {
             if (img_uri != null) {
-                StorageReference ref = mStorageRef.child(mAuth.getUid() + "." + uri.substring(uri.lastIndexOf(".") + 1));
+                StorageReference ref = mStorageRef.child(mAuth.getUid()).child(mAuth.getUid() + "." + uri.substring(uri.lastIndexOf(".") + 1));
                 ref.putFile(img_uri)
                         .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                             @Override
