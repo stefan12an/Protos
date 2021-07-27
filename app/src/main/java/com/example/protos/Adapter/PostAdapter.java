@@ -1,40 +1,26 @@
 package com.example.protos.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.protos.Model.Posts;
-import com.example.protos.Model.Users;
 import com.example.protos.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
-import java.util.Date;
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
-import static android.content.ContentValues.TAG;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private List<Posts> mList;
@@ -44,10 +30,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private StorageReference mUserStorageRef;
     private DatabaseReference UsersDatabaseReference;
     private DatabaseReference PostsDatabaseReference;
+    private OnProfileItemClickListener mOnProfileItemClickListener;
 
-    public PostAdapter(Context context, List<Posts> mList) {
+    public PostAdapter(Context context, List<Posts> mList, OnProfileItemClickListener onProfileItemClickListener) {
         this.mList = mList;
         this.context = context;
+        this.mOnProfileItemClickListener = onProfileItemClickListener;
     }
 
     @NonNull
@@ -56,7 +44,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public PostViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.each_post, parent, false);
 
-        return new PostViewHolder(v);
+        return new PostViewHolder(v, mOnProfileItemClickListener);
     }
 
     @Override
@@ -75,18 +63,29 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return mList.size();
     }
 
-    public class PostViewHolder extends RecyclerView.ViewHolder {
+    public class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView post_pic;
         View mView;
+        OnProfileItemClickListener onProfileItemClickListener;
 
-        public PostViewHolder(@NonNull @NotNull View itemView) {
+        public PostViewHolder(@NonNull @NotNull View itemView, OnProfileItemClickListener onProfileItemClickListener) {
             super(itemView);
             mView = itemView;
+            this.onProfileItemClickListener = onProfileItemClickListener;
+            itemView.setOnClickListener(this);
         }
 
         public void setPost_pic(String urlPost) {
-            post_pic = mView.findViewById(R.id.post_pic);
+            post_pic = mView.findViewById(R.id.feed_post_pic);
             Glide.with(context).load(urlPost).into(post_pic);
         }
+
+        @Override
+        public void onClick(View v) {
+            mOnProfileItemClickListener.OnProfileItemClick(getAdapterPosition());
+        }
+    }
+    public interface OnProfileItemClickListener{
+        void OnProfileItemClick(int position);
     }
 }

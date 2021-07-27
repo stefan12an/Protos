@@ -5,7 +5,7 @@
     grid items for RecyclerView
     -->
     <ImageView
-        android:id="@+id/post_pic"
+        android:id="@+id/feed_post_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"

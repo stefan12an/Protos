@@ -18,7 +18,7 @@
             android:background="@color/viridian">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_pic"
+                android:id="@+id/feed_profile_pic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_centerVertical="true"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="50dp"
-                android:layout_toEndOf="@+id/profile_pic"
+                android:layout_toEndOf="@+id/feed_profile_pic"
                 android:layout_alignParentTop="true"
                 android:textColor="@color/white"
                 android:textSize="20dp"
@@ -44,7 +44,7 @@
                 android:layout_marginTop="70dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginBottom="-30dp"
-                android:layout_toEndOf="@+id/profile_pic"
+                android:layout_toEndOf="@+id/feed_profile_pic"
                 android:layout_alignBottom="@+id/user"
                 android:textColor="@color/white"
                 android:textSize="12dp"
@@ -53,7 +53,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/profileRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/imageView3"
