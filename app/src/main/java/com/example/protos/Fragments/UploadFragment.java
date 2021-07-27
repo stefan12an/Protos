@@ -146,6 +146,7 @@ public class UploadFragment extends Fragment {
 
                                         HashMap<String, String> newPost = new HashMap<String, String>();
                                         newPost.put("user_id", mAuth.getUid());
+                                        newPost.put("post_id",String.valueOf(maxid+1));
                                         newPost.put("username", username);
                                         newPost.put("caption", caption);
                                         newPost.put("creation_date", strDate);

@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/protos_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Protos">
+        <activity android:name=".PostActivity"></activity>
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="sensorPortrait"

@@ -3,19 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    tools:context=".PostActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@color/white"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,8 +30,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/like_count_tv"
                 app:layout_constraintTop_toTopOf="@+id/like_count_tv"
                 app:srcCompat="@drawable/add_comment" />
@@ -44,11 +41,11 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/feed_post_caption"
+                app:layout_constraintTop_toBottomOf="@+id/post_caption"
                 app:srcCompat="@drawable/before_liked" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/feed_profile_pic"
+                android:id="@+id/profile_pic"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="8dp"
@@ -58,7 +55,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/feed_user_holder"
+                android:id="@+id/user_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -66,22 +63,22 @@
                 android:text="Username"
                 android:textColor="@color/black"
                 android:textSize="17sp"
-                app:layout_constraintStart_toEndOf="@+id/feed_profile_pic"
+                app:layout_constraintStart_toEndOf="@+id/profile_pic"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/feed_creation_date"
+                android:id="@+id/creation_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="19/04/2000"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                app:layout_constraintStart_toEndOf="@+id/feed_profile_pic"
-                app:layout_constraintTop_toBottomOf="@+id/feed_user_holder" />
+                app:layout_constraintStart_toEndOf="@+id/profile_pic"
+                app:layout_constraintTop_toBottomOf="@+id/user_holder" />
 
             <ImageView
-                android:id="@+id/feed_post_pic"
+                android:id="@+id/post_pic"
                 android:layout_width="0dp"
                 android:layout_height="220dp"
                 android:layout_marginTop="16dp"
@@ -89,10 +86,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/feed_profile_pic" />
+                app:layout_constraintTop_toBottomOf="@+id/profile_pic" />
 
             <TextView
-                android:id="@+id/feed_post_caption"
+                android:id="@+id/post_caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -101,7 +98,7 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/feed_post_pic" />
+                app:layout_constraintTop_toBottomOf="@+id/post_pic" />
 
             <TextView
                 android:id="@+id/like_count_tv"
