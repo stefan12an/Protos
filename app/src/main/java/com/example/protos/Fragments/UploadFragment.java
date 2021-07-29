@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.protos.Profile;
@@ -50,7 +51,7 @@ import static android.content.ContentValues.TAG;
 public class UploadFragment extends Fragment {
     private String username;
     private FirebaseAuth mAuth;
-    private Button mPostBtn;
+    private CardView mPostBtn;
     private ProgressBar mPostBar;
     private ImageView preview;
     private EditText mCaption;
@@ -64,7 +65,7 @@ public class UploadFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upload, container, false);
-        mPostBtn = (Button) view.findViewById(R.id.postBtn);
+        mPostBtn = (CardView) view.findViewById(R.id.postBtn);
         preview = (ImageView) view.findViewById(R.id.preview);
         mCaption = (EditText) view.findViewById(R.id.caption);
         mPostBar = (ProgressBar) view.findViewById(R.id.post_progress_bar);
@@ -119,7 +120,6 @@ public class UploadFragment extends Fragment {
     private void SelectImage() {
         Intent intent = CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.OFF)
-                .setAspectRatio(3, 2)
                 .setMinCropResultSize(512, 512)
                 .getIntent(getContext());
         startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
