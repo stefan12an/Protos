@@ -6,13 +6,13 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_width="0dp"
+        android:layout_height="350dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@color/white"
+        android:background="#fdfcfa"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,14 +24,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="#fdfcfa">
 
             <ImageView
-                android:id="@+id/comments_post"
+                android:id="@+id/feed_comments_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="7dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/like_count_tv"
                 app:layout_constraintTop_toTopOf="@+id/like_count_tv"
@@ -42,15 +42,15 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/feed_post_caption"
                 app:srcCompat="@drawable/before_liked" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/feed_profile_pic"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/elcipse"
@@ -61,11 +61,11 @@
                 android:id="@+id/feed_user_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="6dp"
                 android:text="Username"
                 android:textColor="@color/black"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toEndOf="@+id/feed_profile_pic"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,21 +73,24 @@
                 android:id="@+id/feed_creation_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:text="19/04/2000"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 app:layout_constraintStart_toEndOf="@+id/feed_profile_pic"
                 app:layout_constraintTop_toBottomOf="@+id/feed_user_holder" />
 
             <ImageView
                 android:id="@+id/feed_post_pic"
+                android:transitionName="robot"
                 android:layout_width="0dp"
                 android:layout_height="220dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerInside"
                 android:src="@drawable/rectangle"
+                android:adjustViewBounds="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/feed_profile_pic" />
 
@@ -108,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="4dp"
                 android:text="0 Likes"
                 android:textColor="@color/black"
                 android:textSize="15sp"

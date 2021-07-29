@@ -3,8 +3,11 @@
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="viridian">#204a3d</color>
+    <color name="viridian">#38715F</color>
+    <color name="viridian_dark">#2d5b54</color>
+    <color name="viridian_highlight">#00C892</color>
+    <color name="orange_highlight">#fdfcfa</color>
+    <color name="orange">#FFA33F</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="danger_red">#D9534F</color>

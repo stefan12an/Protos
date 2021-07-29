@@ -1,6 +1,9 @@
 package com.example.protos.Adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.protos.AddComment;
 import com.example.protos.Model.Posts;
 import com.example.protos.Model.Users;
 import com.example.protos.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,7 +30,6 @@ import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
     private DatabaseReference UsersDatabaseReference;
     private DatabaseReference PostsDatabaseReference;
     OnFeedItemClickListener mOnFeedItemClickListener;
+
 
     public FeedAdapter(Context context, List<Posts> mList, OnFeedItemClickListener onFeedItemClickListener) {
         this.mList = mList;
@@ -87,6 +89,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
+            }
+        });
+
+        holder.comments_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AddComment.class);
+                intent.putExtra("post",post);
+                context.startActivity(intent);
             }
         });
 
@@ -167,6 +178,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             mView = itemView;
             this.onFeedItemClickListener = onFeedItemClickListener;
             like_pic = mView.findViewById(R.id.like_btn);
+            comments_pic = mView.findViewById(R.id.feed_comments_post);
             itemView.setOnClickListener(this);
         }
 
@@ -202,15 +214,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
         @Override
         public void onClick(View v) {
-            onFeedItemClickListener.OnFeedItemClick(getAdapterPosition());
+            ActivityOptions options = ActivityOptions
+                    .makeSceneTransitionAnimation((Activity) context, post_pic, "robot");
+            onFeedItemClickListener.OnFeedItemClick(getAbsoluteAdapterPosition(), options);
         }
     }
 
     public interface OnFeedItemClickListener {
-        void OnFeedItemClick(int position);
+        void OnFeedItemClick(int position, ActivityOptions options);
     }
 
-    public boolean stopUpdate(boolean status) {
-        return status;
-    }
 }

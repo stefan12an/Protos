@@ -116,7 +116,7 @@ public class Settings extends AppCompatActivity {
                 if (isPhotoSelected) {
                     Fileuploader();
                 } else {
-                    startActivity(new Intent(Settings.this, Profile.class));
+                    finish();
                     Toast.makeText(Settings.this, "Changes saved successfully", Toast.LENGTH_SHORT).show();
                 }
             }

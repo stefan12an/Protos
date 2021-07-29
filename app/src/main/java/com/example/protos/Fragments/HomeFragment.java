@@ -1,12 +1,15 @@
 package com.example.protos.Fragments;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -107,9 +110,9 @@ public class HomeFragment extends Fragment implements FeedAdapter.OnFeedItemClic
     }
 
     @Override
-    public void OnFeedItemClick(int position) {
+    public void OnFeedItemClick(int position, ActivityOptions options) {
         Intent intent = new Intent(getContext(), PostActivity.class);
         intent.putExtra("post", (Parcelable) list.get(position));
-        startActivity(intent);
+        startActivity(intent, options.toBundle());
     }
 }

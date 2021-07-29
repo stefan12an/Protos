@@ -1,5 +1,7 @@
 package com.example.protos.Adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.protos.Model.Posts;
 import com.example.protos.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,15 +80,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         public void setPost_pic(String urlPost) {
             post_pic = mView.findViewById(R.id.feed_post_pic);
-            Glide.with(context).load(urlPost).into(post_pic);
+            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_launcher_background);
+            Glide.with(context).load(urlPost).apply(requestOptions).into(post_pic);
         }
 
         @Override
         public void onClick(View v) {
-            mOnProfileItemClickListener.OnProfileItemClick(getAdapterPosition());
+            ActivityOptions options = ActivityOptions
+                    .makeSceneTransitionAnimation((Activity) context, post_pic, "robot");
+            mOnProfileItemClickListener.OnProfileItemClick(getAbsoluteAdapterPosition(), options);
         }
     }
     public interface OnProfileItemClickListener{
-        void OnProfileItemClick(int position);
+        void OnProfileItemClick(int position, ActivityOptions options);
     }
 }

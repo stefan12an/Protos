@@ -1,5 +1,6 @@
 package com.example.protos.Fragments;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -14,7 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.protos.Adapter.PostAdapter;
@@ -56,16 +59,15 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
         View view = inflater.inflate(R.layout.fragment_profile,container,false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.profileRecyclerView);
         mAuth = FirebaseAuth.getInstance();
-        username = view.findViewById(R.id.user);
-        email = view.findViewById(R.id.email);
+//        username = view.findViewById(R.id.user);
+//        email = view.findViewById(R.id.email);
         profile_pic= view.findViewById(R.id.feed_profile_pic);
         mPostStorageRef = FirebaseStorage.getInstance().getReference("PostPics");
         mUserStorageRef = FirebaseStorage.getInstance().getReference("ProfilePic");
         UsersDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
         PostsDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Posts");
-
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
 
         list = new ArrayList<>();
         adapter = new PostAdapter(getContext(), list, this);
@@ -92,21 +94,21 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
             });
         }
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Users post = dataSnapshot.getValue(Users.class);
-                username.setText(post.getUsername());
-                email.setText(post.getEmail());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        UsersDatabaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
+//        ValueEventListener postListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Users post = dataSnapshot.getValue(Users.class);
+//                username.setText(post.getUsername());
+//                email.setText(post.getEmail());
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                // Getting Post failed, log a message
+//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+//            }
+//        };
+//        UsersDatabaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
 
         ValueEventListener postListener1 = new ValueEventListener() {
             @Override
@@ -126,9 +128,9 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
     }
 
     @Override
-    public void OnProfileItemClick(int position) {
+    public void OnProfileItemClick(int position, ActivityOptions options) {
         Intent intent = new Intent(getContext(), PostActivity.class);
         intent.putExtra("post", (Parcelable) list.get(position));
-        startActivity(intent);
+        startActivity(intent, options.toBundle());
     }
 }
