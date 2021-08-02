@@ -83,10 +83,10 @@
             <ImageView
                 android:id="@+id/feed_post_pic"
                 android:transitionName="robot"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_marginTop="8dp"
-                android:scaleType="centerInside"
+                android:scaleType="fitXY"
                 android:src="@drawable/rectangle"
                 android:adjustViewBounds="true"
                 app:layout_constraintEnd_toEndOf="parent"

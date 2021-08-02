@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +27,8 @@ import com.example.protos.Model.Posts;
 import com.example.protos.PostActivity;
 import com.example.protos.R;
 import com.example.protos.Model.Users;
+import com.example.protos.UploadActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,24 +55,32 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
     private DatabaseReference UsersDatabaseReference;
     private DatabaseReference PostsDatabaseReference;
     private ImageView profile_pic;
-    private TextView username,email;
+    private FloatingActionButton action_btn;
+    private TextView username, email;
     private Query query;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile,container,false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.profileRecyclerView);
         mAuth = FirebaseAuth.getInstance();
 //        username = view.findViewById(R.id.user);
 //        email = view.findViewById(R.id.email);
-        profile_pic= view.findViewById(R.id.feed_profile_pic);
+        profile_pic = view.findViewById(R.id.feed_profile_pic);
+        action_btn = view.findViewById(R.id.uploadBtn);
         mPostStorageRef = FirebaseStorage.getInstance().getReference("PostPics");
         mUserStorageRef = FirebaseStorage.getInstance().getReference("ProfilePic");
         UsersDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
         PostsDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Posts");
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
-
+        action_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), UploadActivity.class));
+            }
+        });
         list = new ArrayList<>();
         adapter = new PostAdapter(getContext(), list, this);
         mRecyclerView.setAdapter(adapter);
@@ -77,7 +89,7 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
             query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         Posts post = postSnapshot.getValue(Posts.class);
                         list.add(post);
                     }
@@ -85,6 +97,7 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
                     adapter.notifyDataSetChanged();
                     query.removeEventListener(this);
                 }
+
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     // Getting Post failed, log a message
