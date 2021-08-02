@@ -2,12 +2,15 @@ package com.example.protos;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +28,8 @@ import com.example.protos.Fragments.HomeFragment;
 import com.example.protos.Model.Comments;
 import com.example.protos.Model.Posts;
 import com.example.protos.Model.Users;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +38,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,6 +57,7 @@ public class PostActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     DatabaseReference UsersDatabaseReference;
     DatabaseReference PostsDatabaseReference;
+    private FirebaseStorage mPostStorage;
     private TextView user_holder, caption, likeCount, creation_date;
     private RecyclerView comment_view;
     private ImageView likeBtn, post_pic, comments_post;
@@ -72,6 +80,7 @@ public class PostActivity extends AppCompatActivity {
         comments_post = findViewById(R.id.comments_post);
         comment_view = findViewById(R.id.comment_recyclerView);
         mAuth = FirebaseAuth.getInstance();
+        mPostStorage = FirebaseStorage.getInstance();
         UsersDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
         PostsDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Posts");
         ActionBar actionBar = getSupportActionBar();
@@ -185,7 +194,10 @@ public class PostActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.top_option_menu, menu);
+        if(mAuth.getCurrentUser().getUid().equals(post.getUser_id())) {
+            inflater.inflate(R.menu.post_top_option_menu, menu);
+        }else
+            inflater.inflate(R.menu.top_option_menu, menu);
         return true;
     }
 
@@ -197,6 +209,45 @@ public class PostActivity extends AppCompatActivity {
                 return true;
             case R.id.settings:
                 startActivity(new Intent(PostActivity.this, Settings.class));
+                break;
+            case R.id.deletePost:
+                AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
+                builder.setTitle("Delete this post!");
+                builder.setMessage("By hitting OK you agree to delete this post you've created.");
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.cancel();
+                    }
+                });
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        StorageReference photoRef = mPostStorage.getReferenceFromUrl(String.valueOf(post.getPost_pic()));
+                        photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // File deleted successfully
+                                Log.e(TAG, "onSuccess: deleted file");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Uh-oh, an error occurred!
+                                Log.e(TAG, "onFailure: did not delete file");
+                            }
+                        });
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                PostsDatabaseReference.child(mAuth.getUid()).child(post.getPost_id()).removeValue();
+                                startActivity(new Intent(PostActivity.this,Profile.class));
+                            }
+                        }, 1000);
+                    }
+                });
+                builder.show();
                 break;
             case R.id.logout:
                 mAuth.signOut();

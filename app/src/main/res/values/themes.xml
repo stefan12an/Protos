@@ -21,7 +21,8 @@
 
         <!-- specify shared element transitions -->
         <item name="android:windowSharedElementExitTransition">
-            @transition/change_image_transform</item>
+            @transition/change_image_transform
+        </item>
     </style>
 
     <style name="Theme.Protos.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -40,5 +41,6 @@
     </style>
 
     <style name="Theme.Protos.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.Protos.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

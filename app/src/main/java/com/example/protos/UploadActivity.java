@@ -1,25 +1,22 @@
-package com.example.protos.Fragments;
+package com.example.protos;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-
-import com.example.protos.Profile;
-import com.example.protos.R;
+import com.example.protos.Fragments.ProfileFragment;
 import com.example.protos.Model.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,10 +42,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
-public class UploadFragment extends Fragment {
+public class UploadActivity extends AppCompatActivity {
     private String username;
     private FirebaseAuth mAuth;
     private CardView mPostBtn;
@@ -61,14 +57,14 @@ public class UploadFragment extends Fragment {
     public Uri postImageUri;
     long maxid;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_upload, container, false);
-        mPostBtn = (CardView) view.findViewById(R.id.postBtn);
-        preview = (ImageView) view.findViewById(R.id.preview);
-        mCaption = (EditText) view.findViewById(R.id.caption);
-        mPostBar = (ProgressBar) view.findViewById(R.id.post_progress_bar);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_upload);
+        mPostBtn = (CardView) findViewById(R.id.postBtn);
+        preview = (ImageView) findViewById(R.id.preview);
+        mCaption = (EditText) findViewById(R.id.caption);
+        mPostBar = (ProgressBar) findViewById(R.id.post_progress_bar);
         mPostBar.setVisibility(View.INVISIBLE);
         mAuth = FirebaseAuth.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference("PostPics");
@@ -91,8 +87,8 @@ public class UploadFragment extends Fragment {
         PostsDatabaseReference.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    maxid=snapshot.getChildrenCount();
+                if (snapshot.exists()) {
+                    maxid = snapshot.getChildrenCount();
                 }
             }
 
@@ -114,14 +110,13 @@ public class UploadFragment extends Fragment {
                 LoadPost();
             }
         });
-        return view;
     }
 
     private void SelectImage() {
         Intent intent = CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.OFF)
                 .setMinCropResultSize(512, 512)
-                .getIntent(getContext());
+                .getIntent(UploadActivity.this);
         startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
@@ -146,16 +141,16 @@ public class UploadFragment extends Fragment {
 
                                         HashMap<String, String> newPost = new HashMap<String, String>();
                                         newPost.put("user_id", mAuth.getUid());
-                                        newPost.put("post_id",String.valueOf(maxid+1));
+                                        newPost.put("post_id", String.valueOf(maxid + 1));
                                         newPost.put("username", username);
                                         newPost.put("caption", caption);
                                         newPost.put("creation_date", strDate);
                                         newPost.put("post_pic", uri.toString());
 
-                                        PostsDatabaseReference.child(mAuth.getUid()).child(String.valueOf(maxid+1)).setValue(newPost);
+                                        PostsDatabaseReference.child(mAuth.getUid()).child(String.valueOf(maxid + 1)).setValue(newPost);
                                         mPostBar.setVisibility(View.INVISIBLE);
-                                        Fragment profileFragment = new ProfileFragment();
-                                        getFragmentManager().beginTransaction().replace(R.id.flFragment, profileFragment).commit();
+                                        startActivity(new Intent(UploadActivity.this,Profile.class));
+                                        finish();
                                     }
                                 });
                             }
@@ -164,11 +159,11 @@ public class UploadFragment extends Fragment {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getContext(), "Image Upload error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UploadActivity.this, "Image Upload error", Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
-            Toast.makeText(getContext(), "Please select a profile picture", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UploadActivity.this, "Please select a profile picture", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -181,9 +176,8 @@ public class UploadFragment extends Fragment {
                 postImageUri = result.getUri();
                 preview.setImageURI(postImageUri);
             } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Toast.makeText(getContext(), result.getError().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(UploadActivity.this, result.getError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
 }
-
