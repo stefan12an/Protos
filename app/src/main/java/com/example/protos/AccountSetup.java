@@ -97,7 +97,7 @@ public class AccountSetup extends AppCompatActivity {
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 Date date = new Date();
                 String strDate = dateFormat.format(date);
-                Users user = new Users(userId, mAuth.getCurrentUser().getEmail(), type, DOB, strDate);
+                Users user = new Users(userId, mAuth.getCurrentUser().getEmail(), type, DOB, strDate, mAuth.getUid());
                 databaseReference.child(mAuth.getUid()).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {

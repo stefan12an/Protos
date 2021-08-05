@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,6 +125,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             }
         });
 
+        holder.share_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i =new Intent(Intent.ACTION_SEND);
+                i.setType("image/*");
+                Uri subject = Uri.parse(post.getPost_pic());
+                String shareBody = post.getCaption();
+                i.putExtra(Intent.EXTRA_STREAM,subject);
+                i.putExtra(Intent.EXTRA_TEXT,shareBody);
+                context.startActivity(Intent.createChooser(i,"COX cei ala COX"));
+            }
+        });
+
         PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Likes").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
@@ -169,7 +183,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         private TextView caption;
         private TextView postLikes;
         private CircleImageView profile_pic;
-        private ImageView post_pic, like_pic, comments_pic;
+        private ImageView post_pic, like_pic, comments_pic, share_post;
         OnFeedItemClickListener onFeedItemClickListener;
         View mView;
 
@@ -179,6 +193,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             this.onFeedItemClickListener = onFeedItemClickListener;
             like_pic = mView.findViewById(R.id.like_btn);
             comments_pic = mView.findViewById(R.id.feed_comments_post);
+            share_post = mView.findViewById(R.id.share_post);
             itemView.setOnClickListener(this);
         }
 

@@ -58,6 +58,8 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
     private FloatingActionButton action_btn;
     private TextView username, email;
     private Query query;
+    private Users user;
+    private boolean ok=false;
 
     @Nullable
     @Override
@@ -67,6 +69,12 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
         mAuth = FirebaseAuth.getInstance();
 //        username = view.findViewById(R.id.user);
 //        email = view.findViewById(R.id.email);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            user = bundle.getParcelable("user");
+            ok=true;// Key
+        }
         profile_pic = view.findViewById(R.id.feed_profile_pic);
         action_btn = view.findViewById(R.id.uploadBtn);
         mPostStorageRef = FirebaseStorage.getInstance().getReference("PostPics");
@@ -84,27 +92,120 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
         list = new ArrayList<>();
         adapter = new PostAdapter(getContext(), list, this);
         mRecyclerView.setAdapter(adapter);
-        if (mAuth.getCurrentUser() != null) {
-            query = PostsDatabaseReference.child(mAuth.getUid()).orderByChild("creation_date");
-            query.addValueEventListener(new ValueEventListener() {
+        if(ok) {
+            if (user.getId().equals(mAuth.getUid())) {
+                if (mAuth.getCurrentUser() != null) {
+                    query = PostsDatabaseReference.child(mAuth.getUid()).orderByChild("creation_date");
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                Posts post = postSnapshot.getValue(Posts.class);
+                                list.add(post);
+                            }
+                            Collections.reverse(list);
+                            adapter.notifyDataSetChanged();
+                            query.removeEventListener(this);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Getting Post failed, log a message
+                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                            // ...
+                        }
+                    });
+                }
+                ValueEventListener postListener1 = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String post = dataSnapshot.getValue(String.class);
+                        Glide.with(ProfileFragment.this).load(post).into(profile_pic);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                    }
+                };
+                UsersDatabaseReference.child(mAuth.getUid()).child("profile_pic").addValueEventListener(postListener1);
+
+            } else {
+                query = PostsDatabaseReference.child(user.getId()).orderByChild("creation_date");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            Posts post = postSnapshot.getValue(Posts.class);
+                            list.add(post);
+                        }
+                        Collections.reverse(list);
+                        adapter.notifyDataSetChanged();
+                        query.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                        // ...
+                    }
+                });
+                ValueEventListener postListener1 = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String post = dataSnapshot.getValue(String.class);
+                        Glide.with(ProfileFragment.this).load(post).into(profile_pic);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                    }
+                };
+                UsersDatabaseReference.child(user.getId()).child("profile_pic").addValueEventListener(postListener1);
+
+            }
+        }else{
+            if (mAuth.getCurrentUser() != null) {
+                query = PostsDatabaseReference.child(mAuth.getUid()).orderByChild("creation_date");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            Posts post = postSnapshot.getValue(Posts.class);
+                            list.add(post);
+                        }
+                        Collections.reverse(list);
+                        adapter.notifyDataSetChanged();
+                        query.removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                        // ...
+                    }
+                });
+            }
+            ValueEventListener postListener1 = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        Posts post = postSnapshot.getValue(Posts.class);
-                        list.add(post);
-                    }
-                    Collections.reverse(list);
-                    adapter.notifyDataSetChanged();
-                    query.removeEventListener(this);
+                    String post = dataSnapshot.getValue(String.class);
+                    Glide.with(ProfileFragment.this).load(post).into(profile_pic);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     // Getting Post failed, log a message
                     Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                    // ...
                 }
-            });
+            };
+            UsersDatabaseReference.child(mAuth.getUid()).child("profile_pic").addValueEventListener(postListener1);
+
         }
 
 //        ValueEventListener postListener = new ValueEventListener() {
@@ -123,20 +224,6 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
 //        };
 //        UsersDatabaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
 
-        ValueEventListener postListener1 = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String post = dataSnapshot.getValue(String.class);
-                Glide.with(ProfileFragment.this).load(post).into(profile_pic);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        UsersDatabaseReference.child(mAuth.getUid()).child("profile_pic").addValueEventListener(postListener1);
         return view;
     }
 

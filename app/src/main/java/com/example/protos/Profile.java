@@ -35,6 +35,7 @@ public class Profile extends AppCompatActivity {
     DatabaseReference databaseReference;
     BottomNavigationView bottomNavigationView;
     AnimatedBottomBar meow;
+    Fragment selectedFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +49,12 @@ public class Profile extends AppCompatActivity {
         meow.setOnTabSelected(new Function1<AnimatedBottomBar.Tab, Unit>() {
             @Override
             public Unit invoke(AnimatedBottomBar.Tab tab) {
-                Fragment selectedFragment = null;
+                selectedFragment = null;
                 switch (tab.getId()) {
                     case R.id.miSearch:
                         getSupportActionBar().setElevation(4);
                         selectedFragment = new SearchFragment();
+                        getSupportActionBar().setTitle("Protos");
                         break;
                     case R.id.miHome:
                         getSupportActionBar().setElevation(4);
@@ -90,6 +92,7 @@ public class Profile extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
