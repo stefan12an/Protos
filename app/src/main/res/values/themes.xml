@@ -14,7 +14,6 @@
         <!-- Customize your theme here. -->
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
-
         <!-- specify enter and exit transitions -->
         <!-- options are: explode, slide, fade -->
         <item name="android:windowExitTransition">@transition/change_image_transform</item>

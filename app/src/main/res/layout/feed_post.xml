@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
-        android:layout_height="350dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -47,6 +47,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/feed_post_caption"
                 app:srcCompat="@drawable/before_liked" />
 
+            <ImageView
+                android:id="@+id/share_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="7dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/feed_comments_post"
+                app:layout_constraintTop_toTopOf="@+id/feed_comments_post"
+                app:srcCompat="@drawable/share_post" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/feed_profile_pic"
                 android:layout_width="30dp"
@@ -84,9 +95,9 @@
                 android:id="@+id/feed_post_pic"
                 android:transitionName="robot"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerInside"
                 android:src="@drawable/rectangle"
                 android:adjustViewBounds="true"
                 app:layout_constraintEnd_toEndOf="parent"
