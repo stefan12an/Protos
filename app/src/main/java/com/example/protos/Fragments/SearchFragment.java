@@ -109,7 +109,6 @@ public class SearchFragment extends Fragment implements SearchAdapter.OnSearchIt
 
     @Override
     public void OnSearchItemClick(int position) {
-        Log.e(TAG, "OnSearchItemClick: Merge in PLM? ");
         ProfileFragment profileFragment = new ProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("user", mList.get(position));
@@ -118,8 +117,5 @@ public class SearchFragment extends Fragment implements SearchAdapter.OnSearchIt
                 .beginTransaction()
                 .replace(R.id.flFragment, profileFragment)
                 .commit();
-//        Intent intent = new Intent(getContext(), PostActivity.class);
-//        intent.putExtra("user", (Parcelable) mList.get(position));
-//        startActivity(intent);
     }
 }

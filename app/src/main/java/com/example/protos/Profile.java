@@ -54,41 +54,43 @@ public class Profile extends AppCompatActivity {
                     case R.id.miSearch:
                         getSupportActionBar().setElevation(4);
                         selectedFragment = new SearchFragment();
-                        getSupportActionBar().setTitle("Protos");
                         break;
                     case R.id.miHome:
                         getSupportActionBar().setElevation(4);
                         selectedFragment = new HomeFragment();
-                        getSupportActionBar().setTitle("Protos");
                         break;
                     case R.id.miNotifications:
                         getSupportActionBar().setElevation(4);
                         selectedFragment = new NotificationFragment();
-                        getSupportActionBar().setTitle("Protos");
                         break;
                     case R.id.miProfile:
                         getSupportActionBar().setElevation(0);
-                        ValueEventListener postListener = new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                // Get Post object and use the values to update the UI
-                                Users post = dataSnapshot.getValue(Users.class);
-                                getSupportActionBar().setTitle(post.getUsername());
-                                // ..
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                // Getting Post failed, log a message
-                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                            }
-                        };
-                        databaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
                         selectedFragment = new ProfileFragment();
                         break;
                 }
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, selectedFragment).commit();
-                return null;
+
+                if(selectedFragment instanceof ProfileFragment) {
+                    ValueEventListener postListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get Post object and use the values to update the UI
+                            Users post = dataSnapshot.getValue(Users.class);
+                            getSupportActionBar().setTitle(post.getUsername());
+                            // ..
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Getting Post failed, log a message
+                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                        }
+                    };
+                    databaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
+                }else{
+                    getSupportActionBar().setTitle("Protos");
+                }
+                    return null;
             }
         });
     }
@@ -106,9 +108,6 @@ public class Profile extends AppCompatActivity {
             case R.id.settings:
                 startActivity(new Intent(Profile.this, Settings.class));
                 break;
-            case R.id.logout:
-                mAuth.signOut();
-                startActivity(new Intent(Profile.this, LoginActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
