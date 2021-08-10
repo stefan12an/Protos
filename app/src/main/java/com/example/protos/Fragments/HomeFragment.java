@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.protos.Adapter.FeedAdapter;
 import com.example.protos.Model.Posts;
+import com.example.protos.Model.Users;
 import com.example.protos.PostActivity;
 import com.example.protos.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
@@ -115,5 +117,35 @@ public class HomeFragment extends Fragment implements FeedAdapter.OnFeedItemClic
         Intent intent = new Intent(getContext(), PostActivity.class);
         intent.putExtra("post", (Parcelable) list.get(position));
         startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public void OnProfilePicClick(int position) {
+        Log.e(TAG, "OnProfilePicClick: NASPA");
+        ProfileFragment profileFragment = new ProfileFragment();
+        UsersDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    if(Objects.equals(dataSnapshot.getKey(), list.get(position).getUser_id())){
+                       Users user = dataSnapshot.getValue(Users.class);
+                        Log.e(TAG, user.getId() );
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("user", user);
+                        profileFragment.setArguments(bundle);
+                        getFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.flFragment, profileFragment)
+                                .commit();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
     }
 }

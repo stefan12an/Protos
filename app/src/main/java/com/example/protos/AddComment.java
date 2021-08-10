@@ -3,6 +3,7 @@ package com.example.protos;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,11 +39,14 @@ import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
+import static android.widget.LinearLayout.HORIZONTAL;
 
 public class AddComment extends AppCompatActivity {
-    FirebaseAuth mAuth;
-    DatabaseReference UsersDatabaseReference;
-    DatabaseReference PostsDatabaseReference;
+    private FirebaseAuth mAuth;
+    private DatabaseReference UsersDatabaseReference;
+    private DatabaseReference PostsDatabaseReference;
+    private DividerItemDecoration mDividerItemDecoration;
+    private Posts post;
     private EditText add_comment;
     private Button add_comment_btn;
     private RecyclerView comments_Rview;
@@ -60,17 +64,17 @@ public class AddComment extends AppCompatActivity {
         UsersDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
         PostsDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Posts");
         Bundle bundle = getIntent().getExtras();
-        Posts post = bundle.getParcelable("post");
+        post = bundle.getParcelable("post");
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         commentsList = new ArrayList<>();
-        commentsAdapter = new CommentsAdapter(AddComment.this,commentsList);
+        commentsAdapter = new CommentsAdapter(AddComment.this, commentsList);
 
         comments_Rview.setHasFixedSize(true);
         comments_Rview.setLayoutManager(new LinearLayoutManager(this));
+        comments_Rview.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
         comments_Rview.setAdapter(commentsAdapter);
-
         PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
@@ -98,13 +102,14 @@ public class AddComment extends AppCompatActivity {
                     PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                                Map<String, Object> commentsMap = new HashMap<>();
-                                commentsMap.put("comment", comment);
-                                commentsMap.put("timestamp", ServerValue.TIMESTAMP);
-                                commentsMap.put("user_id", mAuth.getUid());
-                                PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").push().setValue(commentsMap);
-                                PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").removeEventListener(this);
+                            Map<String, Object> commentsMap = new HashMap<>();
+                            commentsMap.put("comment", comment);
+                            commentsMap.put("timestamp", ServerValue.TIMESTAMP);
+                            commentsMap.put("user_id", mAuth.getUid());
+                            PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").push().setValue(commentsMap);
+                            PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").removeEventListener(this);
                         }
+
                         @Override
                         public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
@@ -117,6 +122,7 @@ public class AddComment extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -139,4 +145,5 @@ public class AddComment extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

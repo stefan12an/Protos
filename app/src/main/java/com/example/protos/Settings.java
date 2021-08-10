@@ -51,8 +51,7 @@ import static android.content.ContentValues.TAG;
 public class Settings extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private Button saveBtn;
-    private Button delBtn;
+    private Button saveBtn, delBtn, logOutBtn;
     private CircleImageView edit_pic;
     private EditText new_user;
     private ProgressBar delBar;
@@ -73,7 +72,9 @@ public class Settings extends AppCompatActivity {
         delBar = (ProgressBar) findViewById(R.id.delBar);
         saveBtn = (Button) findViewById(R.id.saveBtn);
         delBtn = (Button) findViewById(R.id.deleteBtn);
+        logOutBtn = (Button) findViewById(R.id.logoutBtn);
         edit_pic = (CircleImageView) findViewById(R.id.edit_pic);
+        new_user = (EditText) findViewById(R.id.edit_user);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         delBar.setVisibility(View.INVISIBLE);
@@ -96,6 +97,19 @@ public class Settings extends AppCompatActivity {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
             });
+        UserDatabaseReference.child(mAuth.getUid()).child("username").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String username = dataSnapshot.getValue(String.class);
+                new_user.setText(username);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        });
         edit_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +122,6 @@ public class Settings extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new_user = (EditText) findViewById(R.id.edit_user);
                 String new_username = new_user.getText().toString();
                 if (!new_username.isEmpty()) {
                     UserDatabaseReference.child(mAuth.getUid()).child("username").setValue(new_user.getText().toString());
@@ -119,6 +132,13 @@ public class Settings extends AppCompatActivity {
                     finish();
                     Toast.makeText(Settings.this, "Changes saved successfully", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        logOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                startActivity(new Intent(Settings.this, LoginActivity.class));
             }
         });
         delBtn.setOnClickListener(new View.OnClickListener() {
@@ -276,28 +296,4 @@ public class Settings extends AppCompatActivity {
             }
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.top_option_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-            case R.id.settings:
-                startActivity(new Intent(Settings.this, Settings.class));
-                break;
-            case R.id.logout:
-                mAuth.signOut();
-                startActivity(new Intent(Settings.this, LoginActivity.class));
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }

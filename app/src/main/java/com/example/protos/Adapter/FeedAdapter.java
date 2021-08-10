@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.protos.AddComment;
+import com.example.protos.Fragments.ProfileFragment;
 import com.example.protos.Model.Posts;
 import com.example.protos.Model.Users;
 import com.example.protos.R;
@@ -39,6 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
     private List<Posts> mList;
+    private Users user;
     private Context context;
     private FirebaseAuth mAuth;
     private StorageReference mPostStorageRef;
@@ -46,7 +50,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
     private boolean status = false;
     private DatabaseReference UsersDatabaseReference;
     private DatabaseReference PostsDatabaseReference;
-    OnFeedItemClickListener mOnFeedItemClickListener;
+    private OnFeedItemClickListener mOnFeedItemClickListener;
 
 
     public FeedAdapter(Context context, List<Posts> mList, OnFeedItemClickListener onFeedItemClickListener) {
@@ -93,11 +97,25 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             }
         });
 
+        holder.profile_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnFeedItemClickListener.OnProfilePicClick(holder.getAbsoluteAdapterPosition());
+            }
+        });
+
+        holder.user_holder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnFeedItemClickListener.OnProfilePicClick(holder.getAbsoluteAdapterPosition());
+            }
+        });
+
         holder.comments_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AddComment.class);
-                intent.putExtra("post",post);
+                intent.putExtra("post", post);
                 context.startActivity(intent);
             }
         });
@@ -128,13 +146,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         holder.share_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i =new Intent(Intent.ACTION_SEND);
+                Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("image/*");
                 Uri subject = Uri.parse(post.getPost_pic());
                 String shareBody = post.getCaption();
-                i.putExtra(Intent.EXTRA_STREAM,subject);
-                i.putExtra(Intent.EXTRA_TEXT,shareBody);
-                context.startActivity(Intent.createChooser(i,"COX cei ala COX"));
+                i.putExtra(Intent.EXTRA_STREAM, subject);
+                i.putExtra(Intent.EXTRA_TEXT, shareBody);
+                context.startActivity(Intent.createChooser(i, "COX cei ala COX"));
             }
         });
 
@@ -160,7 +178,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
                 if (snapshot.exists()) {
                     int count = (int) snapshot.getChildrenCount();
                     holder.setPostLikes(count);
-                }else
+                } else
                     holder.setPostLikes(0);
             }
 
@@ -194,6 +212,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             like_pic = mView.findViewById(R.id.like_btn);
             comments_pic = mView.findViewById(R.id.feed_comments_post);
             share_post = mView.findViewById(R.id.share_post);
+            profile_pic = mView.findViewById(R.id.feed_profile_pic);
+            user_holder = mView.findViewById(R.id.feed_user_holder);
             itemView.setOnClickListener(this);
         }
 
@@ -208,12 +228,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         }
 
         public void setProfile_pic(String urlProfile) {
-            profile_pic = mView.findViewById(R.id.feed_profile_pic);
             Glide.with(context).load(urlProfile).into(profile_pic);
         }
 
         public void setUser_holder(String Username) {
-            user_holder = mView.findViewById(R.id.feed_user_holder);
             user_holder.setText(Username);
         }
 
@@ -237,6 +255,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     public interface OnFeedItemClickListener {
         void OnFeedItemClick(int position, ActivityOptions options);
+        void OnProfilePicClick(int position);
     }
 
 }

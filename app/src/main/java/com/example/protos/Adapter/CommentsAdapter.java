@@ -4,31 +4,37 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.protos.AddComment;
 import com.example.protos.Model.Comments;
+import com.example.protos.Model.Posts;
 import com.example.protos.Model.Users;
 import com.example.protos.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentsViewHolder> {
-
+public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentsViewHolder>{
     private Activity context;
-    DatabaseReference UsersDatabaseReference;
+    private DatabaseReference UsersDatabaseReference;
+    private DatabaseReference PostsDatabaseReference;
     private List<Comments> commentsList;
 
     public CommentsAdapter(Activity context, List<Comments> commentsList) {
@@ -48,7 +54,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     @Override
     public void onBindViewHolder(@NonNull @NotNull CommentsViewHolder holder, int position) {
         UsersDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
-
+        PostsDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Posts");
         Comments comments = commentsList.get(position);
             holder.setmComment(comments.getComment());
 
@@ -80,10 +86,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         TextView mComment;
         TextView username;
         CircleImageView profile_pic;
+        ImageView like_pic;
         View mView;
         public CommentsViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             mView = itemView;
+            like_pic = mView.findViewById(R.id.like_comment);
         }
         public void setmComment(String comment){
             mComment = mView.findViewById(R.id.comment_tv);

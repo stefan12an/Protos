@@ -67,8 +67,6 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.profileRecyclerView);
         mAuth = FirebaseAuth.getInstance();
-//        username = view.findViewById(R.id.user);
-//        email = view.findViewById(R.id.email);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -207,23 +205,6 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
             UsersDatabaseReference.child(mAuth.getUid()).child("profile_pic").addValueEventListener(postListener1);
 
         }
-
-//        ValueEventListener postListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Users post = dataSnapshot.getValue(Users.class);
-//                username.setText(post.getUsername());
-//                email.setText(post.getEmail());
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Getting Post failed, log a message
-//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-//            }
-//        };
-//        UsersDatabaseReference.child(mAuth.getUid()).addValueEventListener(postListener);
-
         return view;
     }
 

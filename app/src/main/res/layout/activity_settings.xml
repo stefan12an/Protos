@@ -11,7 +11,7 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
 
-        android:layout_marginTop="125dp"
+        android:layout_marginTop="80dp"
         android:layout_marginBottom="476dp"
         android:src="@drawable/add_user_pic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -36,22 +36,37 @@
         android:id="@+id/deleteBtn"
         android:layout_width="208dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="32dp"
         android:backgroundTint="@color/danger_red"
         android:text="Delete Account"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/logoutBtn"
+        android:layout_width="208dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/warning_yellow"
+        android:text="Log out"
+        app:layout_constraintBottom_toTopOf="@+id/deleteBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/saveBtn" />
+
     <EditText
         android:id="@+id/edit_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Username"
-        app:layout_constraintBottom_toTopOf="@+id/saveBtn"
+        android:backgroundTint="@color/orange"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_pic" />
 

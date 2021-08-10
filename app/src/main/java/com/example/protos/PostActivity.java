@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -90,9 +91,9 @@ public class PostActivity extends AppCompatActivity {
         post = bundle.getParcelable("post");
         commentsList = new ArrayList<>();
         commentsAdapter = new CommentsAdapter(PostActivity.this,commentsList);
-
         comment_view.setHasFixedSize(true);
         comment_view.setLayoutManager(new LinearLayoutManager(this));
+        comment_view.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
         comment_view.setAdapter(commentsAdapter);
 
 //        PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").addValueEventListener(new ValueEventListener() {
