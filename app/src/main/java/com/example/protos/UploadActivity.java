@@ -7,8 +7,11 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -36,6 +39,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -114,8 +119,10 @@ public class UploadActivity extends AppCompatActivity {
 
     private void SelectImage() {
         Intent intent = CropImage.activity()
-                .setGuidelines(CropImageView.Guidelines.OFF)
-                .setMinCropResultSize(512, 512)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMaxCropResultSize(1080,1350)
+                .setMinCropResultSize(320,566)
+                .setMinCropWindowSize(320,566)
                 .getIntent(UploadActivity.this);
         startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
     }
@@ -170,14 +177,27 @@ public class UploadActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Bitmap bitmap = null;
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 postImageUri = result.getUri();
+                try {
+                    bitmap = getBitmapFromUri(postImageUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 preview.setImageURI(postImageUri);
             } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(UploadActivity.this, result.getError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor = UploadActivity.this.getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return image;
     }
 }

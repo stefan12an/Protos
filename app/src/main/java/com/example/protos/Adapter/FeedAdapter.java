@@ -219,7 +219,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
         public void setPostLikes(int count) {
             postLikes = mView.findViewById(R.id.like_count_tv);
-            postLikes.setText(count + " Likes");
+            if(count>1) {
+                postLikes.setText(count + " Likes");
+            }else if(count==1){
+                postLikes.setText(count + " Like");
+            }else{
+                postLikes.setText(String.valueOf(count));
+            }
         }
 
         public void setPost_pic(String urlPost) {
