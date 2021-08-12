@@ -80,7 +80,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         public void setPost_pic(String urlPost) {
             post_pic = mView.findViewById(R.id.feed_post_pic);
-            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_launcher_background);
+            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.rectangle);
             Glide.with(context).load(urlPost).apply(requestOptions).into(post_pic);
         }
 

@@ -4,13 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.example.protos.Adapter.CommentsAdapter;
 import com.example.protos.Fragments.HomeFragment;
 import com.example.protos.Model.Comments;
@@ -44,6 +55,15 @@ import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,7 +81,7 @@ public class PostActivity extends AppCompatActivity {
     private FirebaseStorage mPostStorage;
     private TextView user_holder, caption, likeCount, creation_date;
     private RecyclerView comment_view;
-    private ImageView likeBtn, post_pic, comments_post;
+    private ImageView likeBtn, post_pic, comments_post, save_pic;
     private CircleImageView profile_pic;
     private List<Comments> commentsList;
     private CommentsAdapter commentsAdapter;
@@ -80,6 +100,7 @@ public class PostActivity extends AppCompatActivity {
         likeCount = findViewById(R.id.like_count_tv);
         comments_post = findViewById(R.id.comments_post);
         comment_view = findViewById(R.id.comment_recyclerView);
+        save_pic = findViewById(R.id.save_btn);
         mAuth = FirebaseAuth.getInstance();
         mPostStorage = FirebaseStorage.getInstance();
         UsersDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
@@ -90,31 +111,11 @@ public class PostActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         post = bundle.getParcelable("post");
         commentsList = new ArrayList<>();
-        commentsAdapter = new CommentsAdapter(PostActivity.this,commentsList);
+        commentsAdapter = new CommentsAdapter(PostActivity.this, commentsList);
         comment_view.setHasFixedSize(true);
         comment_view.setLayoutManager(new LinearLayoutManager(this));
-        comment_view.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+        comment_view.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         comment_view.setAdapter(commentsAdapter);
-
-//        PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                    Comments comm = dataSnapshot.getValue(Comments.class);
-//                    commentsList.add(comm);
-//                }
-//                Collections.reverse(commentsList);
-//                commentsAdapter.notifyDataSetChanged();
-//                PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").removeEventListener(this);
-//
-//                }
-//
-//            @Override
-//            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-//
-//            }
-//        });
-
         user_holder.setText(post.getUsername());
         creation_date.setText(post.getCreation_date());
         caption.setText(post.getCaption());
@@ -122,9 +123,17 @@ public class PostActivity extends AppCompatActivity {
         comments_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PostActivity.this,AddComment.class);
-                intent.putExtra("post",post);
+                Intent intent = new Intent(PostActivity.this, AddComment.class);
+                intent.putExtra("post", post);
                 startActivity(intent);
+            }
+        });
+        save_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadFile(post.getPost_pic());
+                save_pic.setImageDrawable(getDrawable(R.drawable.ic_saved));
+                Toast.makeText(PostActivity.this, "Photo saved successfully", Toast.LENGTH_SHORT).show();
             }
         });
         UsersDatabaseReference.child(post.getUser_id()).child("profile_pic").addValueEventListener(new ValueEventListener() {
@@ -195,9 +204,9 @@ public class PostActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if(mAuth.getCurrentUser().getUid().equals(post.getUser_id())) {
+        if (mAuth.getCurrentUser().getUid().equals(post.getUser_id())) {
             inflater.inflate(R.menu.post_top_option_menu, menu);
-        }else
+        } else
             inflater.inflate(R.menu.top_option_menu, menu);
         return true;
     }
@@ -243,7 +252,7 @@ public class PostActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 PostsDatabaseReference.child(mAuth.getUid()).child(post.getPost_id()).removeValue();
-                                startActivity(new Intent(PostActivity.this,Profile.class));
+                                startActivity(new Intent(PostActivity.this, Profile.class));
                             }
                         }, 1000);
                     }
@@ -277,7 +286,7 @@ public class PostActivity extends AppCompatActivity {
                 commentsAdapter.notifyDataSetChanged();
                 PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").removeEventListener(this);
 
-                }
+            }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
@@ -285,4 +294,22 @@ public class PostActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void downloadFile(String url) {
+        DownloadManager mgr = (DownloadManager) PostActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        Uri downloadUri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(
+                downloadUri);
+        request.setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_WIFI
+                        | DownloadManager.Request.NETWORK_MOBILE)
+                .setAllowedOverRoaming(false).setTitle("Demo")
+                .setDescription("Something useful. No, really.")
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, post.getPost_pic());
+
+        mgr.enqueue(request);
+
+    }
+
 }
