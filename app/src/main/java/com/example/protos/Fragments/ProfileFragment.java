@@ -56,7 +56,6 @@ public class ProfileFragment extends Fragment implements PostAdapter.OnProfileIt
     private DatabaseReference PostsDatabaseReference;
     private ImageView profile_pic;
     private FloatingActionButton action_btn;
-    private TextView username, email;
     private Query query;
     private Users user;
     private boolean ok=false;

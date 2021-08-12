@@ -42,7 +42,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
     private List<Posts> mList;
-    private Users user;
     private Context context;
     private FirebaseAuth mAuth;
     private StorageReference mPostStorageRef;
@@ -146,13 +145,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         holder.share_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("image/*");
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
                 Uri subject = Uri.parse(post.getPost_pic());
-                String shareBody = post.getCaption();
-                i.putExtra(Intent.EXTRA_STREAM, subject);
-                i.putExtra(Intent.EXTRA_TEXT, shareBody);
-                context.startActivity(Intent.createChooser(i, "COX cei ala COX"));
+//                String shareBody = post.getCaption();
+                sendIntent.putExtra(Intent.EXTRA_STREAM, subject);
+//                sendIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                sendIntent.setType("image/*");
+                context.startActivity(Intent.createChooser(sendIntent, "COX cei ala COX"));
             }
         });
 

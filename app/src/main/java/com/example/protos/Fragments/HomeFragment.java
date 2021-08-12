@@ -136,6 +136,7 @@ public class HomeFragment extends Fragment implements FeedAdapter.OnFeedItemClic
                         getFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.flFragment, profileFragment)
+                                .addToBackStack(null)
                                 .commit();
                     }
                 }
