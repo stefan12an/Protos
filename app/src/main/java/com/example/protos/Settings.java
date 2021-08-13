@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.protos.Model.Comments;
 import com.example.protos.Model.Posts;
 import com.example.protos.Model.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,6 +44,8 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -96,7 +99,7 @@ public class Settings extends AppCompatActivity {
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
-            });
+        });
         UserDatabaseReference.child(mAuth.getUid()).child("username").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -166,7 +169,7 @@ public class Settings extends AppCompatActivity {
                                 deleteDatabaseData();
                                 deleteFirebaseUser();
                                 delBar.setVisibility(View.INVISIBLE);
-                                startActivity(new Intent(Settings.this,LoginActivity.class));
+                                startActivity(new Intent(Settings.this, LoginActivity.class));
                             }
                         }, 1000);
                     }
@@ -180,7 +183,7 @@ public class Settings extends AppCompatActivity {
         PostsDatabaseReference.child(mAuth.getUid()).orderByChild("post_pic").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Posts post = dataSnapshot.getValue(Posts.class);
                     StorageReference photoRef = mPostStorage.getReferenceFromUrl(String.valueOf(post.getPost_pic()));
                     photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -207,8 +210,8 @@ public class Settings extends AppCompatActivity {
         UserDatabaseReference.orderByChild("profile_pic").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    if(dataSnapshot.getKey().equals(mAuth.getUid())) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.getKey().equals(mAuth.getUid())) {
                         Users user = dataSnapshot.getValue(Users.class);
                         StorageReference photoRef = mUserStorage.getReferenceFromUrl(String.valueOf(user.getProfile_pic()));
                         photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -234,10 +237,56 @@ public class Settings extends AppCompatActivity {
             }
         });
     }
+
     private void deleteDatabaseData() {
+        PostsDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (!Objects.equals(mAuth.getUid(), dataSnapshot.getKey())) {
+                        PostsDatabaseReference.child(Objects.requireNonNull(dataSnapshot.getKey())).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                                    PostsDatabaseReference.child(dataSnapshot.getKey()).child(Objects.requireNonNull(dataSnapshot1.getKey())).child("Comments").addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                            for (DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
+                                                Comments comments = dataSnapshot2.getValue(Comments.class);
+                                                if (comments.getUser_id().equals(mAuth.getUid())) {
+                                                    PostsDatabaseReference.child(dataSnapshot.getKey()).child(dataSnapshot1.getKey()).child("Comments").child(Objects.requireNonNull(dataSnapshot2.getKey())).removeValue();
+                                                }else {
+                                                    Log.e(TAG, "onDataChange: Nu sa putut");
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
         PostsDatabaseReference.child(mAuth.getUid()).removeValue();
         UserDatabaseReference.child(mAuth.getUid()).removeValue();
     }
+
     private void deleteFirebaseUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -295,5 +344,15 @@ public class Settings extends AppCompatActivity {
                 Toast.makeText(this, result.getError().getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

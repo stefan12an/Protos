@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,7 +70,7 @@ public class AddComment extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         commentsList = new ArrayList<>();
-        commentsAdapter = new CommentsAdapter(AddComment.this, commentsList);
+        commentsAdapter = new CommentsAdapter(AddComment.this, commentsList, post);
 
         comments_Rview.setHasFixedSize(true);
         comments_Rview.setLayoutManager(new LinearLayoutManager(this));
@@ -103,10 +104,12 @@ public class AddComment extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                             Map<String, Object> commentsMap = new HashMap<>();
+                            String key = PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").push().getKey();
+                            commentsMap.put("key", key);
                             commentsMap.put("comment", comment);
                             commentsMap.put("timestamp", ServerValue.TIMESTAMP);
                             commentsMap.put("user_id", mAuth.getUid());
-                            PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").push().setValue(commentsMap);
+                            PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").child(key).setValue(commentsMap);
                             PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").removeEventListener(this);
                         }
 
@@ -118,7 +121,7 @@ public class AddComment extends AppCompatActivity {
                 } else {
                     Toast.makeText(AddComment.this, "Please add a comment!", Toast.LENGTH_SHORT).show();
                 }
-                finish();
+                finishAndRemoveTask();
             }
         });
     }

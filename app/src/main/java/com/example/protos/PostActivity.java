@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -110,12 +111,18 @@ public class PostActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Protos");
         Bundle bundle = getIntent().getExtras();
         post = bundle.getParcelable("post");
+
+
         commentsList = new ArrayList<>();
-        commentsAdapter = new CommentsAdapter(PostActivity.this, commentsList);
+        commentsAdapter = new CommentsAdapter(PostActivity.this, commentsList, post);
         comment_view.setHasFixedSize(true);
         comment_view.setLayoutManager(new LinearLayoutManager(this));
         comment_view.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         comment_view.setAdapter(commentsAdapter);
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new SwipeToDeleteCallback(commentsAdapter, post, commentsList));
+        itemTouchHelper.attachToRecyclerView(comment_view);
+
         user_holder.setText(post.getUsername());
         creation_date.setText(post.getCreation_date());
         caption.setText(post.getCaption());
