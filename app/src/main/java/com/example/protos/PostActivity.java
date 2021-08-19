@@ -5,10 +5,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.app.Activity;
@@ -80,6 +83,7 @@ public class PostActivity extends AppCompatActivity {
     DatabaseReference UsersDatabaseReference;
     DatabaseReference PostsDatabaseReference;
     private FirebaseStorage mPostStorage;
+    SwipeRefreshLayout swipeRefreshLayout;
     private TextView user_holder, caption, likeCount, creation_date;
     private RecyclerView comment_view;
     private ImageView likeBtn, post_pic, comments_post, save_pic;
@@ -103,6 +107,7 @@ public class PostActivity extends AppCompatActivity {
         comment_view = findViewById(R.id.comment_recyclerView);
         save_pic = findViewById(R.id.save_btn);
         mAuth = FirebaseAuth.getInstance();
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         mPostStorage = FirebaseStorage.getInstance();
         UsersDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
         PostsDatabaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Posts");
@@ -111,6 +116,17 @@ public class PostActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Protos");
         Bundle bundle = getIntent().getExtras();
         post = bundle.getParcelable("post");
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                finish();
+                overridePendingTransition(0, 0);
+                getIntent().setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(getIntent());
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
 
         commentsList = new ArrayList<>();
@@ -277,12 +293,13 @@ public class PostActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         commentsList.clear();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").addListenerForSingleValueEvent(new ValueEventListener() {
+        PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {

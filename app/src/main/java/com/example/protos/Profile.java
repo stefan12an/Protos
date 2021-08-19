@@ -3,6 +3,8 @@ package com.example.protos;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +48,8 @@ public class Profile extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance("https://protos-dde67-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
         getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new HomeFragment()).commit();
         getSupportActionBar().setTitle("Protos");
+
+
         meow.setOnTabSelected(new Function1<AnimatedBottomBar.Tab, Unit>() {
             @Override
             public Unit invoke(AnimatedBottomBar.Tab tab) {
