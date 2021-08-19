@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
@@ -74,7 +75,7 @@ public class AddComment extends AppCompatActivity {
 
         comments_Rview.setHasFixedSize(true);
         comments_Rview.setLayoutManager(new LinearLayoutManager(this));
-        comments_Rview.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+        comments_Rview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         comments_Rview.setAdapter(commentsAdapter);
         PostsDatabaseReference.child(post.getUser_id()).child(post.getPost_id()).child("Comments").addValueEventListener(new ValueEventListener() {
             @Override
@@ -121,7 +122,13 @@ public class AddComment extends AppCompatActivity {
                 } else {
                     Toast.makeText(AddComment.this, "Please add a comment!", Toast.LENGTH_SHORT).show();
                 }
-                finishAndRemoveTask();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 300);
             }
         });
     }
